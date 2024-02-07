@@ -922,14 +922,14 @@ public readonly struct Result<T, E>
 /// </summary>
 /// <typeparam name="T">Type</typeparam>
 /// <typeparam name="E">Error</typeparam>
-public readonly struct FromMaybe<T, E> where E : Exception
+public static class FromMaybe<T, E> where E : Exception
 {
     // Use the default constructor, then do the actual initialization (Constructors are very limited with generics...)
 
 
     // `TryCatch` methods which uses `Func` //
 
-    public Result<T, E> TryCatch(Func<T> maybe)
+    public static Result<T, E> TryCatch(Func<T> maybe)
     {
         try
         {
@@ -941,7 +941,7 @@ public readonly struct FromMaybe<T, E> where E : Exception
         }
     }
 
-    public Result<T, E> TryCatch<
+    public static Result<T, E> TryCatch<
         TArg
     >
     (
@@ -963,7 +963,7 @@ public readonly struct FromMaybe<T, E> where E : Exception
         }
     }
 
-    public Result<T, E> TryCatch<
+    public static Result<T, E> TryCatch<
         TArg1, TArg2
     >
     (
@@ -985,7 +985,7 @@ public readonly struct FromMaybe<T, E> where E : Exception
         }
     }
 
-    public Result<T, E> TryCatch<
+    public static Result<T, E> TryCatch<
         TArg1, TArg2, TArg3
     >
     (
@@ -1007,7 +1007,7 @@ public readonly struct FromMaybe<T, E> where E : Exception
         }
     }
 
-    public Result<T, E> TryCatch<
+    public static Result<T, E> TryCatch<
         TArg1, TArg2, TArg3, TArg4
     >
     (
@@ -1029,7 +1029,7 @@ public readonly struct FromMaybe<T, E> where E : Exception
         }
     }
 
-    public Result<T, E> TryCatch<
+    public static Result<T, E> TryCatch<
         TArg1, TArg2, TArg3, TArg4, TArg5
     >
     (
@@ -1051,7 +1051,7 @@ public readonly struct FromMaybe<T, E> where E : Exception
         }
     }
 
-    public Result<T, E> TryCatch<
+    public static Result<T, E> TryCatch<
         TArg1, TArg2, TArg3, TArg4, TArg5, TArg6
     >
     (
@@ -1073,7 +1073,7 @@ public readonly struct FromMaybe<T, E> where E : Exception
         }
     }
 
-    public Result<T, E> TryCatch<
+    public static Result<T, E> TryCatch<
         TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7
     >
     (
@@ -1095,7 +1095,7 @@ public readonly struct FromMaybe<T, E> where E : Exception
         }
     }
 
-    public Result<T, E> TryCatch<
+    public static Result<T, E> TryCatch<
         TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8
     >
     (
@@ -1117,7 +1117,7 @@ public readonly struct FromMaybe<T, E> where E : Exception
         }
     }
 
-    public Result<T, E> TryCatch<
+    public static Result<T, E> TryCatch<
         TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9
     >
     (
@@ -1139,7 +1139,7 @@ public readonly struct FromMaybe<T, E> where E : Exception
         }
     }
 
-    public Result<T, E> TryCatch<
+    public static Result<T, E> TryCatch<
         TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10
     >
     (
@@ -1162,7 +1162,7 @@ public readonly struct FromMaybe<T, E> where E : Exception
         }
     }
 
-    public Result<T, E> TryCatch<
+    public static Result<T, E> TryCatch<
         TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11
     >
     (
@@ -1185,7 +1185,7 @@ public readonly struct FromMaybe<T, E> where E : Exception
         }
     }
 
-    public Result<T, E> TryCatch<
+    public static Result<T, E> TryCatch<
         TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12
     >
     (
@@ -1208,7 +1208,7 @@ public readonly struct FromMaybe<T, E> where E : Exception
         }
     }
 
-    public Result<T, E> TryCatch<
+    public static Result<T, E> TryCatch<
         TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13
     >
     (
@@ -1231,7 +1231,7 @@ public readonly struct FromMaybe<T, E> where E : Exception
         }
     }
 
-    public Result<T, E> TryCatch<
+    public static Result<T, E> TryCatch<
         TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14
     >
     (
@@ -1254,7 +1254,7 @@ public readonly struct FromMaybe<T, E> where E : Exception
         }
     }
 
-    public Result<T, E> TryCatch<
+    public static Result<T, E> TryCatch<
         TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TArg15
     >
     (
@@ -1278,7 +1278,7 @@ public readonly struct FromMaybe<T, E> where E : Exception
         }
     }
 
-    public Result<T, E> TryCatch<
+    public static Result<T, E> TryCatch<
         TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TArg15,
         TArg16
     >
