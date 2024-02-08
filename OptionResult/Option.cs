@@ -4,7 +4,7 @@
 /// Either `Some` or `None`
 /// </summary>
 /// <typeparam name="T">Type</typeparam>
-public readonly struct Option<T>
+public readonly record struct Option<T>
 {
     public readonly bool IsSome;
     public readonly T? Obj;

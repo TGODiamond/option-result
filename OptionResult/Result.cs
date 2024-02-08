@@ -15,12 +15,12 @@ internal sealed class ParameterlessConstructedResultException : Exception
 /// </summary>
 /// <typeparam name="T">Type</typeparam>
 /// <typeparam name="E">Error</typeparam>
-public readonly struct Result<T, E>
+public readonly record struct Result<T, E>
 {
     public readonly bool IsOk;
 
-    public readonly T? Ok;
-    public readonly E? Err;
+    public readonly T? OkObj;
+    public readonly E? ErrObj;
 
 
     // Constructors //
@@ -34,23 +34,38 @@ public readonly struct Result<T, E>
         );
     }
 
-    public Result(E err)
+
+    public Result(T okObj)
     {
-        Err = err;
+        OkObj = okObj;
+        IsOk = true;
+    }
+
+    public Result(E errObj)
+    {
+        ErrObj = errObj;
         IsOk = false;
     }
 
-    public Result(T ok)
-    {
-        Ok = ok;
-        IsOk = true;
-    }
 
     internal Result(bool isOk, T? t, E? e)
     {
         IsOk = isOk;
-        Ok = t;
-        Err = e;
+        OkObj = t;
+        ErrObj = e;
+    }
+
+
+    // Explicit constructors //
+
+    public static Result<T, E> Ok(T t)
+    {
+        return new Result<T, E>(t);
+    }
+
+    public static Result<T, E> Err(E e)
+    {
+        return new Result<T, E>(e);
     }
 
 
@@ -60,8 +75,8 @@ public readonly struct Result<T, E>
     {
         return IsOk switch
         {
-            true => okCase(Ok!),
-            false => errCase(Err!),
+            true => okCase(OkObj!),
+            false => errCase(ErrObj!),
         };
     }
 
@@ -81,10 +96,10 @@ public readonly struct Result<T, E>
     {
         return IsOk switch
         {
-            true => okCase(Ok!,
+            true => okCase(OkObj!,
                 arg
             ),
-            false => errCase(Err!,
+            false => errCase(ErrObj!,
                 arg
             ),
         };
@@ -106,10 +121,10 @@ public readonly struct Result<T, E>
     {
         return IsOk switch
         {
-            true => okCase(Ok!,
+            true => okCase(OkObj!,
                 arg1, arg2
             ),
-            false => errCase(Err!,
+            false => errCase(ErrObj!,
                 arg1, arg2
             ),
         };
@@ -131,10 +146,10 @@ public readonly struct Result<T, E>
     {
         return IsOk switch
         {
-            true => okCase(Ok!,
+            true => okCase(OkObj!,
                 arg1, arg2, arg3
             ),
-            false => errCase(Err!,
+            false => errCase(ErrObj!,
                 arg1, arg2, arg3
             ),
         };
@@ -156,10 +171,10 @@ public readonly struct Result<T, E>
     {
         return IsOk switch
         {
-            true => okCase(Ok!,
+            true => okCase(OkObj!,
                 arg1, arg2, arg3, arg4
             ),
-            false => errCase(Err!,
+            false => errCase(ErrObj!,
                 arg1, arg2, arg3, arg4
             ),
         };
@@ -181,10 +196,10 @@ public readonly struct Result<T, E>
     {
         return IsOk switch
         {
-            true => okCase(Ok!,
+            true => okCase(OkObj!,
                 arg1, arg2, arg3, arg4, arg5
             ),
-            false => errCase(Err!,
+            false => errCase(ErrObj!,
                 arg1, arg2, arg3, arg4, arg5
             ),
         };
@@ -206,10 +221,10 @@ public readonly struct Result<T, E>
     {
         return IsOk switch
         {
-            true => okCase(Ok!,
+            true => okCase(OkObj!,
                 arg1, arg2, arg3, arg4, arg5, arg6
             ),
-            false => errCase(Err!,
+            false => errCase(ErrObj!,
                 arg1, arg2, arg3, arg4, arg5, arg6
             ),
         };
@@ -231,10 +246,10 @@ public readonly struct Result<T, E>
     {
         return IsOk switch
         {
-            true => okCase(Ok!,
+            true => okCase(OkObj!,
                 arg1, arg2, arg3, arg4, arg5, arg6, arg7
             ),
-            false => errCase(Err!,
+            false => errCase(ErrObj!,
                 arg1, arg2, arg3, arg4, arg5, arg6, arg7
             ),
         };
@@ -256,10 +271,10 @@ public readonly struct Result<T, E>
     {
         return IsOk switch
         {
-            true => okCase(Ok!,
+            true => okCase(OkObj!,
                 arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8
             ),
-            false => errCase(Err!,
+            false => errCase(ErrObj!,
                 arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8
             ),
         };
@@ -281,10 +296,10 @@ public readonly struct Result<T, E>
     {
         return IsOk switch
         {
-            true => okCase(Ok!,
+            true => okCase(OkObj!,
                 arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9
             ),
-            false => errCase(Err!,
+            false => errCase(ErrObj!,
                 arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9
             ),
         };
@@ -307,10 +322,10 @@ public readonly struct Result<T, E>
     {
         return IsOk switch
         {
-            true => okCase(Ok!,
+            true => okCase(OkObj!,
                 arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10
             ),
-            false => errCase(Err!,
+            false => errCase(ErrObj!,
                 arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10
             ),
         };
@@ -333,10 +348,10 @@ public readonly struct Result<T, E>
     {
         return IsOk switch
         {
-            true => okCase(Ok!,
+            true => okCase(OkObj!,
                 arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11
             ),
-            false => errCase(Err!,
+            false => errCase(ErrObj!,
                 arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11
             ),
         };
@@ -359,10 +374,10 @@ public readonly struct Result<T, E>
     {
         return IsOk switch
         {
-            true => okCase(Ok!,
+            true => okCase(OkObj!,
                 arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12
             ),
-            false => errCase(Err!,
+            false => errCase(ErrObj!,
                 arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12
             ),
         };
@@ -385,10 +400,10 @@ public readonly struct Result<T, E>
     {
         return IsOk switch
         {
-            true => okCase(Ok!,
+            true => okCase(OkObj!,
                 arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13
             ),
-            false => errCase(Err!,
+            false => errCase(ErrObj!,
                 arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13
             ),
         };
@@ -411,10 +426,10 @@ public readonly struct Result<T, E>
     {
         return IsOk switch
         {
-            true => okCase(Ok!,
+            true => okCase(OkObj!,
                 arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14
             ),
-            false => errCase(Err!,
+            false => errCase(ErrObj!,
                 arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14
             ),
         };
@@ -439,10 +454,10 @@ public readonly struct Result<T, E>
     {
         return IsOk switch
         {
-            true => okCase(Ok!,
+            true => okCase(OkObj!,
                 arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15
             ),
-            false => errCase(Err!,
+            false => errCase(ErrObj!,
                 arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15
             ),
         };
@@ -456,11 +471,11 @@ public readonly struct Result<T, E>
         switch (IsOk)
         {
             case true:
-                okCase(Ok!);
+                okCase(OkObj!);
                 break;
 
             case false:
-                errCase(Err!);
+                errCase(ErrObj!);
                 break;
         }
     }
@@ -481,13 +496,13 @@ public readonly struct Result<T, E>
         switch (IsOk)
         {
             case true:
-                someCase(Ok!,
+                someCase(OkObj!,
                     arg
                 );
                 break;
 
             case false:
-                noneCase(Err!,
+                noneCase(ErrObj!,
                     arg
                 );
                 break;
@@ -510,13 +525,13 @@ public readonly struct Result<T, E>
         switch (IsOk)
         {
             case true:
-                someCase(Ok!,
+                someCase(OkObj!,
                     arg1, arg2
                 );
                 break;
 
             case false:
-                noneCase(Err!,
+                noneCase(ErrObj!,
                     arg1, arg2
                 );
                 break;
@@ -539,13 +554,13 @@ public readonly struct Result<T, E>
         switch (IsOk)
         {
             case true:
-                someCase(Ok!,
+                someCase(OkObj!,
                     arg1, arg2, arg3
                 );
                 break;
 
             case false:
-                noneCase(Err!,
+                noneCase(ErrObj!,
                     arg1, arg2, arg3
                 );
                 break;
@@ -568,13 +583,13 @@ public readonly struct Result<T, E>
         switch (IsOk)
         {
             case true:
-                someCase(Ok!,
+                someCase(OkObj!,
                     arg1, arg2, arg3, arg4
                 );
                 break;
 
             case false:
-                noneCase(Err!,
+                noneCase(ErrObj!,
                     arg1, arg2, arg3, arg4
                 );
                 break;
@@ -597,13 +612,13 @@ public readonly struct Result<T, E>
         switch (IsOk)
         {
             case true:
-                someCase(Ok!,
+                someCase(OkObj!,
                     arg1, arg2, arg3, arg4, arg5
                 );
                 break;
 
             case false:
-                noneCase(Err!,
+                noneCase(ErrObj!,
                     arg1, arg2, arg3, arg4, arg5
                 );
                 break;
@@ -626,13 +641,13 @@ public readonly struct Result<T, E>
         switch (IsOk)
         {
             case true:
-                someCase(Ok!,
+                someCase(OkObj!,
                     arg1, arg2, arg3, arg4, arg5, arg6
                 );
                 break;
 
             case false:
-                noneCase(Err!,
+                noneCase(ErrObj!,
                     arg1, arg2, arg3, arg4, arg5, arg6
                 );
                 break;
@@ -655,13 +670,13 @@ public readonly struct Result<T, E>
         switch (IsOk)
         {
             case true:
-                someCase(Ok!,
+                someCase(OkObj!,
                     arg1, arg2, arg3, arg4, arg5, arg6, arg7
                 );
                 break;
 
             case false:
-                noneCase(Err!,
+                noneCase(ErrObj!,
                     arg1, arg2, arg3, arg4, arg5, arg6, arg7
                 );
                 break;
@@ -684,13 +699,13 @@ public readonly struct Result<T, E>
         switch (IsOk)
         {
             case true:
-                someCase(Ok!,
+                someCase(OkObj!,
                     arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8
                 );
                 break;
 
             case false:
-                noneCase(Err!,
+                noneCase(ErrObj!,
                     arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8
                 );
                 break;
@@ -713,13 +728,13 @@ public readonly struct Result<T, E>
         switch (IsOk)
         {
             case true:
-                someCase(Ok!,
+                someCase(OkObj!,
                     arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9
                 );
                 break;
 
             case false:
-                noneCase(Err!,
+                noneCase(ErrObj!,
                     arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9
                 );
                 break;
@@ -743,13 +758,13 @@ public readonly struct Result<T, E>
         switch (IsOk)
         {
             case true:
-                someCase(Ok!,
+                someCase(OkObj!,
                     arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10
                 );
                 break;
 
             case false:
-                noneCase(Err!,
+                noneCase(ErrObj!,
                     arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10
                 );
                 break;
@@ -773,13 +788,13 @@ public readonly struct Result<T, E>
         switch (IsOk)
         {
             case true:
-                someCase(Ok!,
+                someCase(OkObj!,
                     arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11
                 );
                 break;
 
             case false:
-                noneCase(Err!,
+                noneCase(ErrObj!,
                     arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11
                 );
                 break;
@@ -803,13 +818,13 @@ public readonly struct Result<T, E>
         switch (IsOk)
         {
             case true:
-                someCase(Ok!,
+                someCase(OkObj!,
                     arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12
                 );
                 break;
 
             case false:
-                noneCase(Err!,
+                noneCase(ErrObj!,
                     arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12
                 );
                 break;
@@ -833,13 +848,13 @@ public readonly struct Result<T, E>
         switch (IsOk)
         {
             case true:
-                someCase(Ok!,
+                someCase(OkObj!,
                     arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13
                 );
                 break;
 
             case false:
-                noneCase(Err!,
+                noneCase(ErrObj!,
                     arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13
                 );
                 break;
@@ -863,13 +878,13 @@ public readonly struct Result<T, E>
         switch (IsOk)
         {
             case true:
-                someCase(Ok!,
+                someCase(OkObj!,
                     arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14
                 );
                 break;
 
             case false:
-                noneCase(Err!,
+                noneCase(ErrObj!,
                     arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14
                 );
                 break;
@@ -895,13 +910,13 @@ public readonly struct Result<T, E>
         switch (IsOk)
         {
             case true:
-                someCase(Ok!,
+                someCase(OkObj!,
                     arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15
                 );
                 break;
 
             case false:
-                noneCase(Err!,
+                noneCase(ErrObj!,
                     arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15
                 );
                 break;
