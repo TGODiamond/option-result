@@ -929,7 +929,7 @@ public readonly record struct Option<T>
 /// Returns `None` if no exception was caught.
 /// </summary>
 /// <typeparam name="E">Represents the `Exception`</typeparam>
-public static class FromMaybeVoid<E> where E : Exception
+public readonly record struct FromMaybeVoid<E> where E : Exception
 {
     // Use the default constructor, then do the actual initialization (Constructors are very limited with generics...)
 

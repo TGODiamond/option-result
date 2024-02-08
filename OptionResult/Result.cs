@@ -47,7 +47,6 @@ public readonly record struct Result<T, E>
         IsOk = false;
     }
 
-
     internal Result(bool isOk, T? t, E? e)
     {
         IsOk = isOk;
@@ -58,11 +57,17 @@ public readonly record struct Result<T, E>
 
     // Explicit constructors //
 
+    /// <summary>
+    /// Explicit construction of a `Result` with the `Ok` variant.
+    /// </summary>
     public static Result<T, E> Ok(T t)
     {
         return new Result<T, E>(t);
     }
 
+    /// <summary>
+    /// Explicit construction of a `Result` with the `Err` variant.
+    /// </summary>
     public static Result<T, E> Err(E e)
     {
         return new Result<T, E>(e);
@@ -937,7 +942,7 @@ public readonly record struct Result<T, E>
 /// </summary>
 /// <typeparam name="T">Type</typeparam>
 /// <typeparam name="E">Error</typeparam>
-public static class FromMaybe<T, E> where E : Exception
+public readonly record struct FromMaybe<T, E> where E : Exception
 {
     // Use the default constructor, then do the actual initialization (Constructors are very limited with generics...)
 
