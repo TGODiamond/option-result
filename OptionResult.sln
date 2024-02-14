@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OptionResult", "OptionResult\OptionResult.csproj", "{3EC329C6-41DD-4D8E-A0C6-E9202CAE7112}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OptionResultInAction", "OptionResultInAction\OptionResultInAction.csproj", "{7F1C2198-3AAD-405F-A66A-3EF5BFFF5B7C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{3EC329C6-41DD-4D8E-A0C6-E9202CAE7112}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3EC329C6-41DD-4D8E-A0C6-E9202CAE7112}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3EC329C6-41DD-4D8E-A0C6-E9202CAE7112}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7F1C2198-3AAD-405F-A66A-3EF5BFFF5B7C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7F1C2198-3AAD-405F-A66A-3EF5BFFF5B7C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7F1C2198-3AAD-405F-A66A-3EF5BFFF5B7C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7F1C2198-3AAD-405F-A66A-3EF5BFFF5B7C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
