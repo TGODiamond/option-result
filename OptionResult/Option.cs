@@ -23,7 +23,13 @@ public readonly record struct Option<T>
         IsSome = true;
     }
     
-    
+    internal Option(T? t, bool isSome)
+    {
+        IsSome = isSome;
+        Obj = t;
+    }
+
+
     // Explicit constructors //
 
     /// <summary>
@@ -33,7 +39,7 @@ public readonly record struct Option<T>
     {
         return new Option<T>(value);
     }
-    
+
     /// <summary>
     /// Explicit construction of a `Option` with the `None` variant.
     /// </summary>
@@ -41,9 +47,20 @@ public readonly record struct Option<T>
     {
         return new Option<T>();
     }
-
     
-    // Unwrap //
+    
+    // Convert to `Result`
+
+    /// <summary>
+    /// Converts the `Option` to a `Result`.
+    /// </summary>
+    public Result<T, E> ToResult<E>(E error)
+    {
+        return new Result<T, E>(Obj, error, IsSome);
+    }
+    
+
+    // Unwraps //
 
     public void Unwrap(Action<T> someCase, Action noneCase)
     {
@@ -55,15 +72,17 @@ public readonly record struct Option<T>
 
         noneCase();
     }
-    
+
     public R Unwrap<R>(Func<T, R> someCase, Func<R> noneCase)
     {
-        return IsSome ? someCase(Obj!) : noneCase();
+        return IsSome
+            ? someCase(Obj!)
+            : noneCase();
     }
 }
 
 /// <summary>
-/// Just like a `FromMaybe`, but to methods that return `void`.
+/// Just like a `FromMaybe`, but for methods that return `void`.
 ///
 /// Use the Default constructor to construct this struct, then initialize it with the `TryCatch` method afterwards.
 ///
@@ -71,7 +90,7 @@ public readonly record struct Option<T>
 ///
 /// Returns `None` if no exception was caught.
 /// </summary>
-/// <typeparam name="E">Represents the `Exception`</typeparam>
+/// <typeparam name="E">Exception</typeparam>
 public static class FromMaybeVoid<E> where E : Exception
 {
     // `TryCatch` methods which uses `Action` //

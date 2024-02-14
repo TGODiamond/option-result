@@ -47,6 +47,13 @@ public readonly record struct Result<T, E>
         IsOk = false;
     }
 
+    internal Result(T? t, E? e, bool isOk)
+    {
+        IsOk = isOk;
+        OkObj = t;
+        ErrObj = e;
+    }
+
 
     // Explicit constructors //
 
@@ -65,9 +72,20 @@ public readonly record struct Result<T, E>
     {
         return new Result<T, E>(e);
     }
+
     
+    // Convert to `Option`
     
-    // Unwrap //
+    /// <summary>
+    /// Converts the `Result` to an `Option`.
+    /// </summary>
+    public Option<T> ToOption()
+    {
+        return new Option<T>(OkObj, IsOk);
+    }
+    
+
+    // Unwraps //
 
     public void Unwrap(Action<T> okCase, Action<E> errCase)
     {
@@ -79,17 +97,20 @@ public readonly record struct Result<T, E>
 
         errCase(ErrObj!);
     }
-    
-    public R Unwrap<R>(Func<T, R> okCase, Func<E, R> errCase)
+
+    public R Unwrap<R>(Func<T, R> okCase,
+        Func<E, R> errCase)
     {
-        return IsOk ? okCase(OkObj!) : errCase(ErrObj!);
+        return IsOk
+            ? okCase(OkObj!)
+            : errCase(ErrObj!);
     }
 }
 
 /// <summary>
 /// Converts a throwable method into the `Result` type.
 ///
-/// Useful for porting exceptions into results.
+/// Useful for porting exceptions into `Result`s.
 ///
 /// Use the Default constructor to construct this struct, then initialize it with the `TryCatch` method afterwards.
 ///
@@ -98,7 +119,7 @@ public readonly record struct Result<T, E>
 /// If you want a total guarantee of no exceptions slipping through, let the `E` type be `Exception`.
 /// </summary>
 /// <typeparam name="T">Type</typeparam>
-/// <typeparam name="E">Error</typeparam>
+/// <typeparam name="E">Exception</typeparam>
 public static class FromMaybe<T, E> where E : Exception
 {
     // `TryCatch` methods which uses `Func` //
