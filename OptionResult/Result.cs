@@ -77,9 +77,9 @@ public readonly record struct Result<T, E>
     // Convert to `Option`
     
     /// <summary>
-    /// Converts the `Result` to an `Option`.
+    /// Converts the `Result` into an `Option`.
     /// </summary>
-    public Option<T> ToOption()
+    public Option<T> IntoOption()
     {
         return new Option<T>(OkObj, IsOk);
     }
@@ -98,8 +98,7 @@ public readonly record struct Result<T, E>
         errCase(ErrObj!);
     }
 
-    public R Unwrap<R>(Func<T, R> okCase,
-        Func<E, R> errCase)
+    public R Unwrap<R>(Func<T, R> okCase, Func<E, R> errCase)
     {
         return IsOk
             ? okCase(OkObj!)

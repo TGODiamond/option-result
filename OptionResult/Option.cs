@@ -52,9 +52,9 @@ public readonly record struct Option<T>
     // Convert to `Result`
 
     /// <summary>
-    /// Converts the `Option` to a `Result`.
+    /// Converts the `Option` into a `Result`.
     /// </summary>
-    public Result<T, E> ToResult<E>(E error)
+    public Result<T, E> IntoResult<E>(E error)
     {
         return new Result<T, E>(Obj, error, IsSome);
     }
