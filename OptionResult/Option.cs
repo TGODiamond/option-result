@@ -60,9 +60,9 @@ public readonly record struct Option<T>
     }
     
 
-    // Unwraps //
+    // Match //
 
-    public void Unwrap(Action<T> someCase, Action noneCase)
+    public void Match(Action<T> someCase, Action noneCase)
     {
         if (IsSome)
         {
@@ -73,29 +73,26 @@ public readonly record struct Option<T>
         noneCase();
     }
 
-    public R Unwrap<R>(Func<T, R> someCase, Func<R> noneCase)
+    public R Match<R>(Func<T, R> someCase, Func<R> noneCase)
     {
-        return IsSome
-            ? someCase(Obj!)
-            : noneCase();
+        return IsSome ? someCase(Obj!) : noneCase();
     }
-}
-
-/// <summary>
-/// Just like a `FromMaybe`, but for methods that return `void`.
-///
-/// Use the Default constructor to construct this struct, then initialize it with the `TryCatch` method afterwards.
-///
-/// Returns `Some(E)` if the method passed threw with exception `E`.
-///
-/// Returns `None` if no exception was caught.
-/// </summary>
-/// <typeparam name="E">Exception</typeparam>
-public static class FromMaybeVoid<E> where E : Exception
-{
-    // `TryCatch` methods which uses `Action` //
-
-    public static Option<E> TryCatch(Action maybe)
+    
+    
+    // Porting methods
+    
+    /// <summary>
+    /// Just like a `FromMaybe`, but for methods that return `void`.
+    ///
+    /// Use the Default constructor to construct this struct, then initialize it with the `TryCatch` method afterwards.
+    ///
+    /// Returns `Some(E)` if the method passed threw with exception `E`.
+    ///
+    /// Returns `None` if no exception was caught.
+    /// </summary>
+    /// <typeparam name="E">Exception</typeparam>
+    public static Option<E> TryCatch<E>(Action maybe) 
+        where E : Exception
     {
         try
         {
@@ -106,5 +103,17 @@ public static class FromMaybeVoid<E> where E : Exception
         {
             return new Option<E>(e);
         }
+    }
+    
+    public static Option<T1> FromNullable<T1>(T1? nullableValue)
+        where T1 : struct
+    {
+        return nullableValue is not null ? new Option<T1>(nullableValue.Value) : new Option<T1>();
+    }
+    
+    public static Option<T1> FromNullable<T1>(T1? nullableValue) 
+        where T1 : class
+    {
+        return nullableValue is not null ? new Option<T1>(nullableValue) : new Option<T1>();
     }
 }
