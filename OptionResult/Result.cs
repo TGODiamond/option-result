@@ -118,7 +118,7 @@ public readonly record struct Result<T, E>
     /// If you want a total guarantee of no exceptions slipping through, let the `E` type be `Exception`.
     /// </summary>
     /// <typeparam name="T">Type</typeparam>
-    /// <typeparam name="E1"></typeparam>
+    /// <typeparam name="E1">Exception</typeparam>
     public static Result<T, E1> TryCatch<E1>(Func<T> maybe) 
         where E1 : Exception
     {
