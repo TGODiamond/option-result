@@ -1,7 +1,7 @@
 ﻿namespace OptionResult;
 
 /// <summary>
-/// Either `Some` which has a value or `None` which doesn't have a value.
+/// Either `Some` which have a value or `None` which doesn't have a value.
 /// </summary>
 /// <typeparam name="T">Type</typeparam>
 public readonly record struct Option<T>

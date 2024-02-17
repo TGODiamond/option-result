@@ -9,7 +9,7 @@ internal sealed class ParameterlessConstructedResultException : Exception
 }
 
 /// <summary>
-/// Either `Ok` which has an "ok" value or `Err` which has an "error" value.
+/// Either `Ok` which have an "ok" value or `Err` which have an "error" value.
 ///
 /// Note: Using the Default constructor, i.e. `new Result()` with no parameters, is forbidden and will throw.
 /// </summary>
