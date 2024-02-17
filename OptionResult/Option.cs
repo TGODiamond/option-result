@@ -6,6 +6,7 @@
 /// <typeparam name="T">Type</typeparam>
 public readonly record struct Option<T>
 {
+    // Keep the fields public, they're readonly anyways.
     public readonly bool IsSome;
     public readonly T? Obj;
 

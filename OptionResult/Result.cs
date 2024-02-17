@@ -17,6 +17,7 @@ internal sealed class ParameterlessConstructedResultException : Exception
 /// <typeparam name="E">Error</typeparam>
 public readonly record struct Result<T, E>
 {
+    // Keep the fields public, they're readonly anyways.
     public readonly bool IsOk;
     public readonly T? OkObj;
     public readonly E? ErrObj;
@@ -146,12 +147,12 @@ public readonly record struct Result<T, E>
         try
         {
             var nullable = maybe();
-            var opt = nullable switch
+            var option = nullable switch
             {
                 not null => new Option<T1>(nullable.Value),
                 null => new Option<T1>()
             };
-            return new Result<Option<T1>, E1>(opt);
+            return new Result<Option<T1>, E1>(option);
         }
         catch (E1 e)
         {
@@ -173,12 +174,12 @@ public readonly record struct Result<T, E>
         try
         {
             var nullable = maybe();
-            var opt = nullable switch
+            var option = nullable switch
             {
                 not null => new Option<T1>(nullable),
                 null => new Option<T1>()
             };
-            return new Result<Option<T1>, E1>(opt);
+            return new Result<Option<T1>, E1>(option);
         }
         catch (E1 e)
         {
