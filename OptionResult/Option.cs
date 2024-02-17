@@ -1,7 +1,7 @@
 ﻿namespace OptionResult;
 
 /// <summary>
-/// Either `Some` or `None`
+/// Either `Some` which has a value or `None` which doesn't have a value.
 /// </summary>
 /// <typeparam name="T">Type</typeparam>
 public readonly record struct Option<T>
@@ -105,12 +105,20 @@ public readonly record struct Option<T>
         }
     }
     
+    /// <summary>
+    /// Converts a nullable value type into a non-nullable `Option`.
+    /// </summary>
+    /// <typeparam name="T1">Type (same as `T`)</typeparam>
     public static Option<T1> FromNullable<T1>(T1? nullableValue)
         where T1 : struct
     {
         return nullableValue is not null ? new Option<T1>(nullableValue.Value) : new Option<T1>();
     }
     
+    /// <summary>
+    /// Converts a nullable reference type into a non-nullable `Option`.
+    /// </summary>
+    /// <typeparam name="T1">Type (same as `T`)</typeparam>
     public static Option<T1> FromNullable<T1>(T1? nullableValue) 
         where T1 : class
     {

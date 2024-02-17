@@ -9,7 +9,7 @@ internal sealed class ParameterlessConstructedResultException : Exception
 }
 
 /// <summary>
-/// Either `Ok` or `Err`.
+/// Either `Ok` which has an "ok" value or `Err` which has an "error" value.
 ///
 /// Note: Using the Default constructor is forbidden and will throw.
 /// </summary>
@@ -98,6 +98,10 @@ public readonly record struct Result<T, E>
         errCase(ErrObj!);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="R">Return Type</typeparam>
     public R Match<R>(Func<T, R> okCase, Func<E, R> errCase)
     {
         return IsOk ? okCase(OkObj!) : errCase(ErrObj!);
@@ -132,6 +136,13 @@ public readonly record struct Result<T, E>
         }
     }
 
+    /// <summary>
+    /// Just like a `TryCatch(), but also converts the returning nullable value type into a non-nullable `Option`
+    /// encapsulated within the `Ok`variant of the `Result`.
+    /// </summary>
+    /// <param name="maybe"></param>
+    /// <typeparam name="T1">Type (same as `T`)</typeparam>
+    /// <typeparam name="E1">Exception (same as `E`)</typeparam>
     public static Result<Option<T1>, E1> TryCatchFromNullable<T1, E1>(Func<T1?> maybe)
         where T1 : struct
         where E1 : Exception
@@ -152,6 +163,13 @@ public readonly record struct Result<T, E>
         }
     }
     
+    /// <summary>
+    /// Just like a `TryCatch(), but also converts the returning nullable reference type into a non-nullable `Option`
+    /// encapsulated within the `Ok` variant of the `Result`.
+    /// </summary>
+    /// <param name="maybe"></param>
+    /// <typeparam name="T1">Type (same as `T`)</typeparam>
+    /// <typeparam name="E1">Exception (same as `E`)</typeparam>
     public static Result<Option<T1>, E1> TryCatchFromNullable<T1, E1>(Func<T1?> maybe)
         where T1 : class
         where E1 : Exception
