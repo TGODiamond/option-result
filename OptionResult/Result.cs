@@ -138,7 +138,7 @@ public readonly record struct Result<T, E>
 
     /// <summary>
     /// Just like a `TryCatch()`, but also converts the returning nullable value type into a non-nullable `Option`
-    /// encapsulated within the `Ok`variant of the `Result`.
+    /// encapsulated within the `Ok` variant of the `Result`.
     /// </summary>
     /// <param name="maybe"></param>
     /// <typeparam name="T1">Type (same as `T`)</typeparam>
