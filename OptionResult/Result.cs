@@ -98,10 +98,7 @@ public readonly record struct Result<T, E>
 
         errCase(ErrObj!);
     }
-
-    /// <summary>
-    /// 
-    /// </summary>
+    
     /// <typeparam name="R">Return Type</typeparam>
     public R Match<R>(Func<T, R> okCase, Func<E, R> errCase)
     {

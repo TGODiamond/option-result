@@ -74,6 +74,7 @@ public readonly record struct Option<T>
         noneCase();
     }
 
+    /// <typeparam name="R">Return Type</typeparam>
     public R Match<R>(Func<T, R> someCase, Func<R> noneCase)
     {
         return IsSome ? someCase(Obj!) : noneCase();
