@@ -11,7 +11,7 @@ internal sealed class ParameterlessConstructedResultException : Exception
 /// <summary>
 /// Either `Ok` which has an "ok" value or `Err` which has an "error" value.
 ///
-/// Note: Using the Default constructor is forbidden and will throw.
+/// Note: Using the Default constructor, i.e. `new Result()` with no parameters, is forbidden and will throw.
 /// </summary>
 /// <typeparam name="T">Type</typeparam>
 /// <typeparam name="E">Error</typeparam>
@@ -115,11 +115,7 @@ public readonly record struct Result<T, E>
     /// 
     /// Useful for porting exceptions into `Result`s.
     /// 
-    /// Use the Default constructor to construct this struct, then initialize it with the `TryCatch` method afterwards.
-    /// 
-    /// Failing to initialize the `FromMaybe` before reading the `Result` inside will throw.
-    /// 
-    /// If you want a total guarantee of no exceptions slipping through, let the `E` type be `Exception`.
+    /// If you want a total guarantee of no exceptions slipping through, let the `E` type be type `Exception`.
     /// </summary>
     /// <typeparam name="T">Type</typeparam>
     /// <typeparam name="E1">Exception</typeparam>
