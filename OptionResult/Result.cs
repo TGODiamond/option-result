@@ -137,7 +137,7 @@ public readonly record struct Result<T, E>
     }
 
     /// <summary>
-    /// Just like a `TryCatch(), but also converts the returning nullable value type into a non-nullable `Option`
+    /// Just like a `TryCatch()`, but also converts the returning nullable value type into a non-nullable `Option`
     /// encapsulated within the `Ok`variant of the `Result`.
     /// </summary>
     /// <param name="maybe"></param>
@@ -164,7 +164,7 @@ public readonly record struct Result<T, E>
     }
     
     /// <summary>
-    /// Just like a `TryCatch(), but also converts the returning nullable reference type into a non-nullable `Option`
+    /// Just like a `TryCatch()`, but also converts the returning nullable reference type into a non-nullable `Option`
     /// encapsulated within the `Ok` variant of the `Result`.
     /// </summary>
     /// <param name="maybe"></param>
