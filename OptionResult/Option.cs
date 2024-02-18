@@ -1,5 +1,7 @@
 ﻿namespace OptionResult;
 
+// 5 - 7 (rare: 8) times slower than a normal null-check
+
 /// <summary>
 /// Either `Some` which have a value or `None` which doesn't have a value.
 /// </summary>
@@ -7,8 +9,8 @@
 public readonly record struct Option<T>
 {
     // Keep the fields public, they're readonly anyways.
-    public readonly bool IsSome { get; }
-    public readonly T? Obj { get; }
+    public bool IsSome { get; }
+    public T? Obj { get; }
 
 
     // Constructors //

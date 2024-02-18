@@ -18,9 +18,9 @@ internal sealed class ParameterlessConstructedResultException : Exception
 public readonly record struct Result<T, E>
 {
     // Keep the fields public, they're readonly anyways.
-    public readonly bool IsOk { get; }
-    public readonly T? OkObj { get; }
-    public readonly E? ErrObj { get; }
+    public bool IsOk { get; }
+    public T? OkObj { get; }
+    public E? ErrObj { get; }
 
 
     // Constructors //
