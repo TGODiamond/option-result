@@ -7,8 +7,8 @@
 public readonly record struct Option<T>
 {
     // Keep the fields public, they're readonly anyways.
-    public readonly bool IsSome;
-    public readonly T? Obj;
+    public readonly bool IsSome { get; }
+    public readonly T? Obj { get; }
 
 
     // Constructors //
@@ -63,7 +63,7 @@ public readonly record struct Option<T>
 
     // Match //
 
-    public void Match(Action<T> someCase, Action noneCase)
+    public void Match(in Action<T> someCase, in Action noneCase)
     {
         if (IsSome)
         {
@@ -75,7 +75,7 @@ public readonly record struct Option<T>
     }
 
     /// <typeparam name="R">Return Type</typeparam>
-    public R Match<R>(Func<T, R> someCase, Func<R> noneCase)
+    public R Match<R>(in Func<T, R> someCase, in Func<R> noneCase)
     {
         return IsSome ? someCase(Obj!) : noneCase();
     }
@@ -93,7 +93,7 @@ public readonly record struct Option<T>
     /// Returns `None` if no exception was caught.
     /// </summary>
     /// <typeparam name="E">Exception</typeparam>
-    public static Option<E> TryCatch<E>(Action maybe) 
+    public static Option<E> TryCatch<E>(in Action maybe) 
         where E : Exception
     {
         try

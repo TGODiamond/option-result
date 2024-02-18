@@ -18,9 +18,9 @@ internal sealed class ParameterlessConstructedResultException : Exception
 public readonly record struct Result<T, E>
 {
     // Keep the fields public, they're readonly anyways.
-    public readonly bool IsOk;
-    public readonly T? OkObj;
-    public readonly E? ErrObj;
+    public readonly bool IsOk { get; }
+    public readonly T? OkObj { get; }
+    public readonly E? ErrObj { get; }
 
 
     // Constructors //
@@ -88,7 +88,7 @@ public readonly record struct Result<T, E>
 
     // Match //
 
-    public void Match(Action<T> okCase, Action<E> errCase)
+    public void Match(in Action<T> okCase, in Action<E> errCase)
     {
         if (IsOk)
         {
@@ -100,7 +100,7 @@ public readonly record struct Result<T, E>
     }
     
     /// <typeparam name="R">Return Type</typeparam>
-    public R Match<R>(Func<T, R> okCase, Func<E, R> errCase)
+    public R Match<R>(in Func<T, R> okCase, in Func<E, R> errCase)
     {
         return IsOk ? okCase(OkObj!) : errCase(ErrObj!);
     }
@@ -117,7 +117,7 @@ public readonly record struct Result<T, E>
     /// </summary>
     /// <typeparam name="T">Type</typeparam>
     /// <typeparam name="E1">Exception</typeparam>
-    public static Result<T, E1> TryCatch<E1>(Func<T> maybe) 
+    public static Result<T, E1> TryCatch<E1>(in Func<T> maybe) 
         where E1 : Exception
     {
         try
@@ -137,7 +137,7 @@ public readonly record struct Result<T, E>
     /// <param name="maybe"></param>
     /// <typeparam name="T1">Type (same as `T`)</typeparam>
     /// <typeparam name="E1">Exception (same as `E`)</typeparam>
-    public static Result<Option<T1>, E1> TryCatchFromNullable<T1, E1>(Func<T1?> maybe)
+    public static Result<Option<T1>, E1> TryCatchFromNullable<T1, E1>(in Func<T1?> maybe)
         where T1 : struct
         where E1 : Exception
     {
@@ -164,7 +164,7 @@ public readonly record struct Result<T, E>
     /// <param name="maybe"></param>
     /// <typeparam name="T1">Type (same as `T`)</typeparam>
     /// <typeparam name="E1">Exception (same as `E`)</typeparam>
-    public static Result<Option<T1>, E1> TryCatchFromNullable<T1, E1>(Func<T1?> maybe)
+    public static Result<Option<T1>, E1> TryCatchFromNullable<T1, E1>(in Func<T1?> maybe)
         where T1 : class
         where E1 : Exception
     {
