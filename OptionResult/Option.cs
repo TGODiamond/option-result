@@ -24,7 +24,7 @@ public readonly record struct Option<T>
         IsSome = true;
     }
     
-    internal Option(T? t, bool isSome)
+    internal Option(bool isSome, T? t)
     {
         IsSome = isSome;
         Obj = t;
@@ -57,7 +57,7 @@ public readonly record struct Option<T>
     /// </summary>
     public Result<T, E> IntoResult<E>(E error)
     {
-        return new Result<T, E>(Obj, error, IsSome);
+        return new Result<T, E>(IsSome, Obj, error);
     }
     
 

@@ -48,7 +48,7 @@ public readonly record struct Result<T, E>
         IsOk = false;
     }
 
-    internal Result(T? t, E? e, bool isOk)
+    internal Result(bool isOk, T? t, E? e)
     {
         IsOk = isOk;
         OkObj = t;
@@ -82,7 +82,7 @@ public readonly record struct Result<T, E>
     /// </summary>
     public Option<T> IntoOption()
     {
-        return new Option<T>(OkObj, IsOk);
+        return new Option<T>(IsOk, OkObj);
     }
     
 
