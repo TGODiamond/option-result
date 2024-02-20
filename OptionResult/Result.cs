@@ -1,4 +1,6 @@
-﻿namespace OptionResult;
+﻿using System.Runtime.CompilerServices;
+
+namespace OptionResult;
 
 internal sealed class ParameterlessConstructedResultException : Exception
 {
@@ -103,6 +105,20 @@ public readonly record struct Result<T, E>
     public R Match<R>(in Func<T, R> okCase, in Func<E, R> errCase)
     {
         return IsOk ? okCase(OkObj!) : errCase(ErrObj!);
+    }
+    
+    
+    // Type Conversion //
+
+    /// <summary>
+    /// Returns one type where both `T` and `E` can be converted to that type.
+    /// </summary>
+    /// <typeparam name="R">Return Type (both `T` and `E`, since they are the same)</typeparam>
+    /// <returns>Return type (a type which `T` and `E` can cast to)</returns>
+    public R Return<R>()
+        where R : T, E
+    {
+        return IsOk ? (R)OkObj! : (R)ErrObj!;
     }
     
     
