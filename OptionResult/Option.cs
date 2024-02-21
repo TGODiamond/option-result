@@ -87,6 +87,29 @@ public readonly record struct Option<T>
     }
     
     
+    // Alternatives //
+    
+    /// <summary>
+    /// If `Some`, then this method returns the contained value inside the `Option`.
+    /// If `None`, then the method returns the value in the parameter.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public T SomeOr(in T alt)
+    {
+        return IsSome ? Obj! : alt;
+    }
+    
+    /// <summary>
+    /// Just like the `SomeOr()` method, but the parameter is lazily evaluated.
+    /// This method only runs given method inside the parameter if the `Option` is `None`.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public T SomeOrElse(in Func<T> altFunc)
+    {
+        return IsSome ? Obj! : altFunc();
+    }
+    
+    
     // Porting methods
     
     /// <summary>

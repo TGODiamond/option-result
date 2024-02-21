@@ -117,6 +117,7 @@ public readonly record struct Result<T, E>
     /// </summary>
     /// <typeparam name="R">Return Type (both `T` and `E`, since they are the same)</typeparam>
     /// <returns>Return type (a type which `T` and `E` can cast to)</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public R Return<R>()
         where R : T, E
     {
