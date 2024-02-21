@@ -1,4 +1,6 @@
-﻿namespace OptionResult;
+﻿using System.Runtime.CompilerServices;
+
+namespace OptionResult;
 
 // 5 - 7 (rare: 8) times slower than a normal null-check
 
@@ -77,6 +79,7 @@ public readonly record struct Option<T>
     }
 
     /// <typeparam name="R">Return Type</typeparam>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public R Match<R>(in Func<T, R> someCase, in Func<R> noneCase)
     {
         return IsSome ? someCase(Obj!) : noneCase();

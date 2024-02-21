@@ -102,6 +102,7 @@ public readonly record struct Result<T, E>
     }
     
     /// <typeparam name="R">Return Type</typeparam>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public R Match<R>(in Func<T, R> okCase, in Func<E, R> errCase)
     {
         return IsOk ? okCase(OkObj!) : errCase(ErrObj!);
