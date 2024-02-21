@@ -67,6 +67,7 @@ public readonly record struct Option<T>
 
     // Match //
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void Match(in Action<T> someCase, in Action noneCase)
     {
         if (IsSome)

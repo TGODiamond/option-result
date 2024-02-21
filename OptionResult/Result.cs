@@ -90,6 +90,7 @@ public readonly record struct Result<T, E>
 
     // Match //
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void Match(in Action<T> okCase, in Action<E> errCase)
     {
         if (IsOk)
