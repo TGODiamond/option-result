@@ -2,6 +2,9 @@
 
 namespace OptionResult;
 
+// Up to 13 slower than a try/catch on author's computer with the integer type.
+// Much, MUCH faster than try/catch which caught an exception.
+
 internal sealed class ParameterlessConstructedResultException : Exception
 {
     internal ParameterlessConstructedResultException(string message)

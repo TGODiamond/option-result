@@ -2,7 +2,7 @@
 
 namespace OptionResult;
 
-// 5 - 7 (rare: 8) times slower than a normal null-check
+// Up to 13 slower than a null check on author's computer with the integer type.
 
 /// <summary>
 /// Either `Some` which have a value or `None` which doesn't have a value.
