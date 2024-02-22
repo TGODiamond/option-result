@@ -15,8 +15,9 @@ internal sealed class ParameterlessConstructedResultException : Exception
 /// <summary>
 /// Either `Ok` which have an "ok" value or `Err` which have an "error" value.
 ///
-/// Setting `T` as a nullable, aka. using the `?` operator, must never be used, especially where T is a value type. 
-/// `Result` is an alternative to exceptions, after all.
+/// Setting `T` as a nullable, aka. using the `?` operator, must never be used, especially where T is a value type.
+/// 
+/// `Result` is an alternative to exceptions.
 /// 
 /// Note: Using the Default constructor, i.e. `new Result()` with no parameters, is forbidden and will throw.
 /// </summary>

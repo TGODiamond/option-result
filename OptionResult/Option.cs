@@ -7,8 +7,9 @@ namespace OptionResult;
 /// <summary>
 /// Either `Some` which have a value or `None` which doesn't have a value.
 ///
-/// Setting `T` as a nullable, aka. using the `?` operator, must never be used, especially where T is a value type. 
-/// `Option` is an alternative to nulls, after all.
+/// Setting `T` as a nullable, aka. using the `?` operator, must never be used, especially where T is a value type.
+///  
+/// `Option` is an alternative to nulls.
 /// </summary>
 /// <typeparam name="T">Type</typeparam>
 public readonly record struct Option<T>
