@@ -14,7 +14,6 @@ public readonly record struct Option<T>
     public bool IsSome { get; }
     public T? Obj { get; }
 
-
     // Constructors //
 
     public Option()
@@ -27,13 +26,12 @@ public readonly record struct Option<T>
         Obj = value;
         IsSome = true;
     }
-    
+
     internal Option(bool isSome, T? t)
     {
         IsSome = isSome;
         Obj = t;
     }
-
 
     // Explicit constructors //
 
@@ -52,8 +50,7 @@ public readonly record struct Option<T>
     {
         return new Option<T>();
     }
-    
-    
+
     // Convert to `Result`
 
     /// <summary>
@@ -63,7 +60,6 @@ public readonly record struct Option<T>
     {
         return new Result<T, E>(IsSome, Obj, error);
     }
-    
 
     // Match //
 
@@ -85,10 +81,9 @@ public readonly record struct Option<T>
     {
         return IsSome ? someCase(Obj!) : noneCase();
     }
-    
-    
+
     // Alternatives //
-    
+
     /// <summary>
     /// If `Some`, then this method returns the contained value inside the `Option`.
     /// If `None`, then the method returns the value in the parameter.
@@ -98,7 +93,7 @@ public readonly record struct Option<T>
     {
         return IsSome ? Obj! : alt;
     }
-    
+
     /// <summary>
     /// Just like the `SomeOr()` method, but the parameter is lazily evaluated.
     /// This method only runs given method inside the parameter if the `Option` is `None`.
@@ -108,10 +103,9 @@ public readonly record struct Option<T>
     {
         return IsSome ? Obj! : altFunc();
     }
-    
-    
-    // Porting methods
-    
+
+    // Porting methods //
+
     /// <summary>
     /// Just like a `FromMaybe`, but for methods that return `void`.
     ///
@@ -122,8 +116,7 @@ public readonly record struct Option<T>
     /// Returns `None` if no exception was caught.
     /// </summary>
     /// <typeparam name="E">Exception</typeparam>
-    public static Option<E> TryCatch<E>(in Action maybe) 
-        where E : Exception
+    public static Option<E> TryCatch<E>(in Action maybe) where E : Exception
     {
         try
         {
@@ -135,23 +128,21 @@ public readonly record struct Option<T>
             return new Option<E>(e);
         }
     }
-    
+
     /// <summary>
     /// Converts a nullable value type into a non-nullable `Option`.
     /// </summary>
     /// <typeparam name="T1">Type (same as `T`)</typeparam>
-    public static Option<T1> FromNullable<T1>(T1? nullableValue)
-        where T1 : struct
+    public static Option<T1> FromNullable<T1>(T1? nullableValue) where T1 : struct
     {
         return nullableValue is not null ? new Option<T1>(nullableValue.Value) : new Option<T1>();
     }
-    
+
     /// <summary>
     /// Converts a nullable reference type into a non-nullable `Option`.
     /// </summary>
     /// <typeparam name="T1">Type (same as `T`)</typeparam>
-    public static Option<T1> FromNullable<T1>(T1? nullableValue) 
-        where T1 : class
+    public static Option<T1> FromNullable<T1>(T1? nullableValue) where T1 : class
     {
         return nullableValue is not null ? new Option<T1>(nullableValue) : new Option<T1>();
     }

@@ -7,8 +7,7 @@ namespace OptionResult;
 
 internal sealed class ParameterlessConstructedResultException : Exception
 {
-    internal ParameterlessConstructedResultException(string message)
-        : base(message)
+    internal ParameterlessConstructedResultException(string message) : base(message)
     {
     }
 }
@@ -27,7 +26,6 @@ public readonly record struct Result<T, E>
     public T? OkObj { get; }
     public E? ErrObj { get; }
 
-
     // Constructors //
 
     // Disallow default constructor
@@ -36,10 +34,8 @@ public readonly record struct Result<T, E>
     {
         throw new ParameterlessConstructedResultException(
             "Constructing a `Result` without any parameters is forbidden. (Default constructor forbidden) " +
-            "Use `new Result<T, E>(E)`, to return an Error."
-        );
+            "Use `new Result<T, E>(E)`, to return an Error.");
     }
-
 
     public Result(T okObj)
     {
@@ -60,7 +56,6 @@ public readonly record struct Result<T, E>
         ErrObj = e;
     }
 
-
     // Explicit constructors //
 
     /// <summary>
@@ -79,9 +74,8 @@ public readonly record struct Result<T, E>
         return new Result<T, E>(e);
     }
 
-    
     // Convert to `Option`
-    
+
     /// <summary>
     /// Converts the `Result` into an `Option`.
     /// </summary>
@@ -89,7 +83,6 @@ public readonly record struct Result<T, E>
     {
         return new Option<T>(IsOk, OkObj);
     }
-    
 
     // Match //
 
@@ -104,15 +97,14 @@ public readonly record struct Result<T, E>
 
         errCase(ErrObj!);
     }
-    
+
     /// <typeparam name="R">Return Type</typeparam>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public R Match<R>(in Func<T, R> okCase, in Func<E, R> errCase)
     {
         return IsOk ? okCase(OkObj!) : errCase(ErrObj!);
     }
-    
-    
+
     // Type Conversion //
 
     /// <summary>
@@ -121,14 +113,12 @@ public readonly record struct Result<T, E>
     /// <typeparam name="R">Return Type (both `T` and `E`, since they are the same)</typeparam>
     /// <returns>Return type (a type which `T` and `E` can cast to)</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public R Return<R>()
-        where R : T, E
+    public R Return<R>() where R : T, E
     {
         return IsOk ? (R)OkObj! : (R)ErrObj!;
     }
-    
-    
-    // Porting methods
+
+    // Porting methods //
 
     /// <summary>
     /// Converts a throwable method into the `Result` type.
@@ -139,8 +129,7 @@ public readonly record struct Result<T, E>
     /// </summary>
     /// <typeparam name="T">Type</typeparam>
     /// <typeparam name="E1">Exception</typeparam>
-    public static Result<T, E1> TryCatch<E1>(in Func<T> maybe) 
-        where E1 : Exception
+    public static Result<T, E1> TryCatch<E1>(in Func<T> maybe) where E1 : Exception
     {
         try
         {
@@ -160,8 +149,7 @@ public readonly record struct Result<T, E>
     /// <typeparam name="T1">Type (same as `T`)</typeparam>
     /// <typeparam name="E1">Exception (same as `E`)</typeparam>
     public static Result<Option<T1>, E1> TryCatchFromNullable<T1, E1>(in Func<T1?> maybe)
-        where T1 : struct
-        where E1 : Exception
+        where T1 : struct where E1 : Exception
     {
         try
         {
@@ -178,7 +166,7 @@ public readonly record struct Result<T, E>
             return new Result<Option<T1>, E1>(e);
         }
     }
-    
+
     /// <summary>
     /// Just like a `TryCatch()`, but also converts the returning nullable reference type into a non-nullable `Option`
     /// encapsulated within the `Ok` variant of the `Result`.
@@ -187,8 +175,7 @@ public readonly record struct Result<T, E>
     /// <typeparam name="T1">Type (same as `T`)</typeparam>
     /// <typeparam name="E1">Exception (same as `E`)</typeparam>
     public static Result<Option<T1>, E1> TryCatchFromNullable<T1, E1>(in Func<T1?> maybe)
-        where T1 : class
-        where E1 : Exception
+        where T1 : class where E1 : Exception
     {
         try
         {
