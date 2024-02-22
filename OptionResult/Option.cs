@@ -111,7 +111,7 @@ public readonly record struct Option<T>
         return IsSome ? Obj! : altFunc();
     }
     
-    // IfSomeOrElse and co. (less runtime cost compared to `Match()`, because of lambdas) //
+    // IfSomeOrElse and co. (less runtime cost compared to `Match()`, because of less or no usage of lambdas) //
 
     /// <summary>
     /// Even cheaper than a `Match()` that returns.

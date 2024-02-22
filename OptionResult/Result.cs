@@ -125,7 +125,7 @@ public readonly record struct Result<T, E>
         return IsOk ? (R)OkObj! : (R)ErrObj!;
     }
 
-    // IfOkOrElse and co. (less runtime cost compared to `Match()`, because of lambdas) //
+    // IfOkOrElse and co. (less runtime cost compared to `Match()`, because of less or no usage of lambdas) //
 
     /// <summary>
     /// Even cheaper than a `Match()` that returns.
