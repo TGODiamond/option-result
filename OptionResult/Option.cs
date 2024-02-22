@@ -29,7 +29,7 @@ public readonly record struct Option<T>
         Obj = value;
         IsSome = true;
     }
-    
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal Option(bool isSome, in T? t)
     {
@@ -96,7 +96,7 @@ public readonly record struct Option<T>
     /// If `None`, then the method returns the value in the parameter.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public T SomeOr(in T alt)
+    public T SomeOrElse(in T alt)
     {
         return IsSome ? Obj! : alt;
     }
@@ -106,11 +106,11 @@ public readonly record struct Option<T>
     /// This method only runs given method inside the parameter if the `Option` is `None`.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public T SomeOrElse(in Func<T> altFunc)
+    public T SomeOrElseRun(in Func<T> altFunc)
     {
         return IsSome ? Obj! : altFunc();
     }
-    
+
     // IfSomeOrElse and co. (less runtime cost compared to `Match()`, because of less or no usage of lambdas) //
 
     /// <summary>
@@ -130,10 +130,15 @@ public readonly record struct Option<T>
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public void RunIfSome(in Action okCase)
+    public void RunIfSome(in Action<T> someCase)
     {
-        if (IsSome)
-            okCase();
+        if (IsSome) someCase(Obj!);
+    }
+    
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void RunIfNone(in Action noneCase)
+    {
+        if (IsSome) noneCase();
     }
 
     // Porting methods //

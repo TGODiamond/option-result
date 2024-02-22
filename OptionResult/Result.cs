@@ -51,7 +51,7 @@ public readonly record struct Result<T, E>
         ErrObj = errObj;
         IsOk = false;
     }
-    
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal Result(bool isOk, in T? t, in E? e)
     {
@@ -136,19 +136,33 @@ public readonly record struct Result<T, E>
     {
         return IsOk ? okCase : errCase;
     }
-    
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public R RunIfOkOrElse<R>(in Func<T, R> okCase, in R errCase)
     {
         return IsOk ? okCase(OkObj!) : errCase;
     }
-    
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public R RunIfErrOrElse<R>(in Func<E, R> errCase, in R okCase)
     {
         return !IsOk ? errCase(ErrObj!) : okCase;
     }
     
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void RunIfOk(in Action<T> okCase)
+    {
+        if (IsOk)
+            okCase(OkObj!);
+    }
+    
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void RunIfErr(in Action<E> okCase)
+    {
+        if (IsOk)
+            okCase(ErrObj!);
+    }
+
     // Porting methods //
 
     /// <summary>
