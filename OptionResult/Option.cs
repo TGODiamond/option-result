@@ -138,7 +138,7 @@ public readonly record struct Option<T>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void RunIfNone(in Action noneCase)
     {
-        if (IsSome) noneCase();
+        if (!IsSome) noneCase();
     }
 
     // Porting methods //
