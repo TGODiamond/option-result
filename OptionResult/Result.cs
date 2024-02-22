@@ -159,7 +159,7 @@ public readonly record struct Result<T, E>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void RunIfErr(in Action<E> okCase)
     {
-        if (IsOk)
+        if (!IsOk)
             okCase(ErrObj!);
     }
 
