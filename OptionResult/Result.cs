@@ -15,6 +15,9 @@ internal sealed class ParameterlessConstructedResultException : Exception
 /// <summary>
 /// Either `Ok` which have an "ok" value or `Err` which have an "error" value.
 ///
+/// Setting `T` as a nullable, aka. using the `?` operator, must never be used, especially where T is a value type. 
+/// `Result` is an alternative to exceptions, after all.
+/// 
 /// Note: Using the Default constructor, i.e. `new Result()` with no parameters, is forbidden and will throw.
 /// </summary>
 /// <typeparam name="T">Type</typeparam>
@@ -37,19 +40,20 @@ public readonly record struct Result<T, E>
             "Use `new Result<T, E>(E)`, to return an Error.");
     }
 
-    public Result(T okObj)
+    public Result(in T okObj)
     {
         OkObj = okObj;
         IsOk = true;
     }
 
-    public Result(E errObj)
+    public Result(in E errObj)
     {
         ErrObj = errObj;
         IsOk = false;
     }
-
-    internal Result(bool isOk, T? t, E? e)
+    
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    internal Result(bool isOk, in T? t, in E? e)
     {
         IsOk = isOk;
         OkObj = t;
@@ -61,7 +65,8 @@ public readonly record struct Result<T, E>
     /// <summary>
     /// Explicit construction of a `Result` with the `Ok` variant.
     /// </summary>
-    public static Result<T, E> Ok(T t)
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Result<T, E> Ok(in T t)
     {
         return new Result<T, E>(t);
     }
@@ -69,7 +74,8 @@ public readonly record struct Result<T, E>
     /// <summary>
     /// Explicit construction of a `Result` with the `Err` variant.
     /// </summary>
-    public static Result<T, E> Err(E e)
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Result<T, E> Err(in E e)
     {
         return new Result<T, E>(e);
     }
@@ -79,6 +85,7 @@ public readonly record struct Result<T, E>
     /// <summary>
     /// Converts the `Result` into an `Option`.
     /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public Option<T> IntoOption()
     {
         return new Option<T>(IsOk, OkObj);
@@ -110,7 +117,7 @@ public readonly record struct Result<T, E>
     /// <summary>
     /// Returns one type where both `T` and `E` can be converted to that type.
     /// </summary>
-    /// <typeparam name="R">Return Type (both `T` and `E`, since they are the same)</typeparam>
+    /// <typeparam name="R">Return Type</typeparam>
     /// <returns>Return type (a type which `T` and `E` can cast to)</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public R Return<R>() where R : T, E
@@ -118,6 +125,30 @@ public readonly record struct Result<T, E>
         return IsOk ? (R)OkObj! : (R)ErrObj!;
     }
 
+    // IfOkOrElse and co. (less runtime cost compared to `Match()`, because of lambdas) //
+
+    /// <summary>
+    /// Even cheaper than a `Match()` that returns.
+    /// </summary>
+    /// <typeparam name="R">Return Type</typeparam>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public R IfOkOrElse<R>(in R okCase, in R errCase)
+    {
+        return IsOk ? okCase : errCase;
+    }
+    
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public R RunIfOkOrElse<R>(in Func<T, R> okCase, in R errCase)
+    {
+        return IsOk ? okCase(OkObj!) : errCase;
+    }
+    
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public R RunIfErrOrElse<R>(in Func<E, R> errCase, in R okCase)
+    {
+        return !IsOk ? errCase(ErrObj!) : okCase;
+    }
+    
     // Porting methods //
 
     /// <summary>
@@ -129,6 +160,7 @@ public readonly record struct Result<T, E>
     /// </summary>
     /// <typeparam name="T">Type</typeparam>
     /// <typeparam name="E1">Exception</typeparam>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Result<T, E1> TryCatch<E1>(in Func<T> maybe) where E1 : Exception
     {
         try
@@ -148,6 +180,7 @@ public readonly record struct Result<T, E>
     /// <param name="maybe"></param>
     /// <typeparam name="T1">Type (same as `T`)</typeparam>
     /// <typeparam name="E1">Exception (same as `E`)</typeparam>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Result<Option<T1>, E1> TryCatchFromNullable<T1, E1>(in Func<T1?> maybe)
         where T1 : struct where E1 : Exception
     {
@@ -174,6 +207,7 @@ public readonly record struct Result<T, E>
     /// <param name="maybe"></param>
     /// <typeparam name="T1">Type (same as `T`)</typeparam>
     /// <typeparam name="E1">Exception (same as `E`)</typeparam>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Result<Option<T1>, E1> TryCatchFromNullable<T1, E1>(in Func<T1?> maybe)
         where T1 : class where E1 : Exception
     {

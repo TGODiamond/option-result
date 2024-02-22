@@ -6,6 +6,9 @@ namespace OptionResult;
 
 /// <summary>
 /// Either `Some` which have a value or `None` which doesn't have a value.
+///
+/// Setting `T` as a nullable, aka. using the `?` operator, must never be used, especially where T is a value type. 
+/// `Option` is an alternative to nulls, after all.
 /// </summary>
 /// <typeparam name="T">Type</typeparam>
 public readonly record struct Option<T>
@@ -21,13 +24,14 @@ public readonly record struct Option<T>
         IsSome = false;
     }
 
-    public Option(T value)
+    public Option(in T value)
     {
         Obj = value;
         IsSome = true;
     }
-
-    internal Option(bool isSome, T? t)
+    
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    internal Option(bool isSome, in T? t)
     {
         IsSome = isSome;
         Obj = t;
@@ -38,6 +42,7 @@ public readonly record struct Option<T>
     /// <summary>
     /// Explicit construction of a `Option` with the `Some` variant.
     /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Option<T> Some(T value)
     {
         return new Option<T>(value);
@@ -46,6 +51,7 @@ public readonly record struct Option<T>
     /// <summary>
     /// Explicit construction of a `Option` with the `None` variant.
     /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Option<T> None()
     {
         return new Option<T>();
@@ -56,7 +62,8 @@ public readonly record struct Option<T>
     /// <summary>
     /// Converts the `Option` into a `Result`.
     /// </summary>
-    public Result<T, E> IntoResult<E>(E error)
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public Result<T, E> IntoResult<E>(in E error)
     {
         return new Result<T, E>(IsSome, Obj, error);
     }
@@ -103,6 +110,31 @@ public readonly record struct Option<T>
     {
         return IsSome ? Obj! : altFunc();
     }
+    
+    // IfSomeOrElse and co. (less runtime cost compared to `Match()`, because of lambdas) //
+
+    /// <summary>
+    /// Even cheaper than a `Match()` that returns.
+    /// </summary>
+    /// <typeparam name="R">Return Type</typeparam>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public R IfSomeOrElse<R>(in R someCase, in R noneCase)
+    {
+        return IsSome ? someCase : noneCase;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public R RunIfSomeOrElse<R>(in Func<T, R> someCase, in R noneCase)
+    {
+        return IsSome ? someCase(Obj!) : noneCase;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void RunIfSome(in Action okCase)
+    {
+        if (IsSome)
+            okCase();
+    }
 
     // Porting methods //
 
@@ -116,6 +148,7 @@ public readonly record struct Option<T>
     /// Returns `None` if no exception was caught.
     /// </summary>
     /// <typeparam name="E">Exception</typeparam>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Option<E> TryCatch<E>(in Action maybe) where E : Exception
     {
         try
@@ -133,7 +166,8 @@ public readonly record struct Option<T>
     /// Converts a nullable value type into a non-nullable `Option`.
     /// </summary>
     /// <typeparam name="T1">Type (same as `T`)</typeparam>
-    public static Option<T1> FromNullable<T1>(T1? nullableValue) where T1 : struct
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Option<T1> FromNullable<T1>(in T1? nullableValue) where T1 : struct
     {
         return nullableValue is not null ? new Option<T1>(nullableValue.Value) : new Option<T1>();
     }
@@ -142,7 +176,8 @@ public readonly record struct Option<T>
     /// Converts a nullable reference type into a non-nullable `Option`.
     /// </summary>
     /// <typeparam name="T1">Type (same as `T`)</typeparam>
-    public static Option<T1> FromNullable<T1>(T1? nullableValue) where T1 : class
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Option<T1> FromNullable<T1>(in T1? nullableValue) where T1 : class
     {
         return nullableValue is not null ? new Option<T1>(nullableValue) : new Option<T1>();
     }
