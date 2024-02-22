@@ -148,19 +148,17 @@ public readonly record struct Result<T, E>
     {
         return !IsOk ? errCase(ErrObj!) : okCase;
     }
-    
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void RunIfOk(in Action<T> okCase)
     {
-        if (IsOk)
-            okCase(OkObj!);
+        if (IsOk) okCase(OkObj!);
     }
-    
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void RunIfErr(in Action<E> okCase)
     {
-        if (!IsOk)
-            okCase(ErrObj!);
+        if (!IsOk) okCase(ErrObj!);
     }
 
     // Porting methods //

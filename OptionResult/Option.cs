@@ -134,7 +134,7 @@ public readonly record struct Option<T>
     {
         if (IsSome) someCase(Obj!);
     }
-    
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void RunIfNone(in Action noneCase)
     {
