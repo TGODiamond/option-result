@@ -113,45 +113,32 @@ public readonly record struct Result<T, E>
         return IsOk ? okCase(OkObj!) : errCase(ErrObj!);
     }
 
-    // Type Conversion //
-
-    /// <summary>
-    /// Returns one type where both `T` and `E` can be converted to that type.
-    /// </summary>
-    /// <typeparam name="R">Return Type</typeparam>
-    /// <returns>Return type (a type which `T` and `E` can cast to)</returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public R Return<R>() where R : T, E
-    {
-        return IsOk ? (R)OkObj! : (R)ErrObj!;
-    }
-
     // Alternatives //
-    
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public T OkOrElse(in T alt)
     {
         return IsOk ? OkObj! : alt;
     }
-    
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public T OkOrElseRun(in Func<T> altFunc)
     {
         return IsOk ? OkObj! : altFunc();
     }
-    
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public E ErrOrElse(in E alt)
     {
         return IsOk ? ErrObj! : alt;
     }
-    
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public E ErrOrElseRun(in Func<E> altFunc)
     {
         return !IsOk ? ErrObj! : altFunc();
     }
-    
+
     // IfOkOrElse and co. (less runtime cost compared to `Match()`, because of less or no usage of lambdas) //
 
     /// <summary>
