@@ -247,7 +247,7 @@ public readonly record struct Result<T, E>
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public T OkOrThrowException<TException>(TException exception) where TException : Exception
+    public T OkOrThrowException<TException>(in TException exception) where TException : Exception
     {
         return IsOk ? OkObj! : throw exception;
     }
