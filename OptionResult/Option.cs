@@ -187,4 +187,26 @@ public readonly record struct Option<T>
     {
         return nullableValue is not null ? new Option<T1>(nullableValue) : new Option<T1>();
     }
+
+    /// <summary>
+    /// A more clear way to represent `Option.Obj`.
+    /// </summary>
+    /// <returns>Nullable Type</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public T? ToNullable()
+    {
+        return Obj;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void NoneOrThrowSome<TException>() where TException : Exception, T
+    {
+        if (IsSome) throw (TException)Obj!;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public T SomeOrThrowException<TException>(TException exception) where TException : Exception
+    {
+        return IsSome ? Obj! : throw exception;
+    }
 }

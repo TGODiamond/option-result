@@ -239,4 +239,16 @@ public readonly record struct Result<T, E>
             return new Result<Option<T1>, E1>(e);
         }
     }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public T OkOrThrowErr<TException>() where TException : Exception, E
+    {
+        return IsOk ? OkObj! : throw (TException)ErrObj!;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public T OkOrThrowException<TException>(TException exception) where TException : Exception
+    {
+        return IsOk ? OkObj! : throw exception;
+    }
 }
