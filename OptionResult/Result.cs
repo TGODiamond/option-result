@@ -118,7 +118,7 @@ public readonly record struct Result<T, E>
     /// <summary>
     /// Returns one type where both `T` and `E` can be converted to that type.
     ///
-    /// Please use the type `T` is, in the type parameter.
+    /// Please use the type that both `T` and `E` is, in the type parameter.
     /// </summary>
     /// <typeparam name="R">Return Type</typeparam>
     /// <returns>Return type (a type which `T` and `E` can cast to)</returns>
