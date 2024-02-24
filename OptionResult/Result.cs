@@ -130,13 +130,13 @@ public readonly record struct Result<T, E>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public E ErrOrElse(in E alt)
     {
-        return IsOk ? ErrObj! : alt;
+        return !IsOk ? ErrObj! : alt;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public E ErrOrElseRun(in Func<E> altFunc)
+    public E ErrOrElseRun(in Func<T, E> altFunc)
     {
-        return !IsOk ? ErrObj! : altFunc();
+        return !IsOk ? ErrObj! : altFunc(OkObj!);
     }
 
     // IfOkOrElse and co. (less runtime cost compared to `Match()`, because of less or no usage of lambdas) //
