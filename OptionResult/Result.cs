@@ -18,6 +18,8 @@ internal sealed class ParameterlessConstructedResultException : Exception
 /// Setting `T` as a nullable, aka. using the `?` operator, must never be used, especially where T is a value type.
 /// 
 /// `Result` is an alternative to exceptions.
+///
+/// If performance is critical, avoid using any methods that use delegates in their parameter, such as `Match`.
 /// 
 /// Note: Using the Default constructor, i.e. `new Result()` with no parameters, is forbidden and will throw.
 /// </summary>
@@ -154,7 +156,7 @@ public readonly record struct Result<T, E>
         return !IsOk ? ErrObj! : altFunc(OkObj!);
     }
     
-    // IfOkOrElse and co. (less runtime cost compared to `Match()`, because of less or no usage of lambdas) //
+    // IfOkOrElse and co. //
 
     /// <summary>
     /// Even cheaper than a `Match()` that returns.

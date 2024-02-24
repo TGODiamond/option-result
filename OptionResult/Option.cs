@@ -10,6 +10,9 @@ namespace OptionResult;
 /// Setting `T` as a nullable, aka. using the `?` operator, must never be used, especially where T is a value type.
 ///  
 /// `Option` is an alternative to nulls.
+///
+/// If performance is critical, like in loops with many iterations, avoid using any methods that use delegates in their
+/// parameter, such as `Match`.
 /// </summary>
 /// <typeparam name="T">Type</typeparam>
 public readonly record struct Option<T>
@@ -20,11 +23,17 @@ public readonly record struct Option<T>
 
     // Constructors //
 
+    /// <summary>
+    /// Constructs a `Option` set to `None`, aka. an empty `Option`.
+    /// </summary>
     public Option()
     {
         IsSome = false;
     }
 
+    /// <summary>
+    /// Constructs a `Option` set to `Some`, aka. an `Option` that contains a value.
+    /// </summary>
     public Option(in T value)
     {
         Obj = value;
@@ -61,8 +70,9 @@ public readonly record struct Option<T>
     // Convert to `Result`
 
     /// <summary>
-    /// Converts the `Option` into a `Result`.
+    /// Converts the `Option` into a `Result, given a new `Err` type.
     /// </summary>
+    /// <typeparam name="E">Error type</typeparam>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public Result<T, E> IntoResult<E>(in E error)
     {
@@ -71,6 +81,12 @@ public readonly record struct Option<T>
 
     // Match //
 
+    /// <summary>
+    /// Non-returning `Match`. The `someCase` action gets run if this `Result` is `Some`, returning the contained `Ok`
+    /// value to that action.
+    ///
+    /// Else, noneCase gets run, returning the contained `Err` value.
+    /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void Match(in Action<T> someCase, in Action noneCase)
     {
@@ -83,6 +99,14 @@ public readonly record struct Option<T>
         noneCase();
     }
 
+    /// <summary>
+    /// `Match` that returns `R`. The `someCase` function gets run if this `Result` is `Some`, returning the contained
+    /// `Ok` value to that function.
+    ///
+    /// Else, noneCase gets run, returning the contained `Err` value.
+    ///
+    /// Both functions must return the same type, `R`.
+    /// </summary>
     /// <typeparam name="R">Return Type</typeparam>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public R Match<R>(in Func<T, R> someCase, in Func<R> noneCase)
@@ -93,8 +117,12 @@ public readonly record struct Option<T>
     // Alternatives //
 
     /// <summary>
-    /// If `Some`, then this method returns the contained value inside the `Option`.
-    /// If `None`, then the method returns the value in the parameter.
+    /// If the `Result` is `Some`, then this method returns the contained value inside the `Option`.
+    /// Else, then this method returns the value in the parameter.
+    ///
+    /// The parameter's type must be the same as the contained value's type.
+    ///
+    /// This method can surely be used in performance critical situations.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public T SomeOrElse(in T alt)
@@ -103,8 +131,13 @@ public readonly record struct Option<T>
     }
 
     /// <summary>
-    /// Just like the `SomeOr()` method, but the parameter is lazily evaluated.
+    /// Just like the `SomeOrElse()` method, but the parameter is lazily evaluated.
     /// This method only runs given method inside the parameter if the `Option` is `None`.
+    ///
+    /// Note: Just because the function in the parameter is lazily evaluated doesn't mean this method is performant.
+    ///
+    /// For critical performance, use the `SomeOrElse` method instead. Only if the code in the delegate itself does
+    /// something expensive should this method be used in performance critical situations.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public T SomeOrElseRun(in Func<T> altFunc)
@@ -112,10 +145,17 @@ public readonly record struct Option<T>
         return IsSome ? Obj! : altFunc();
     }
 
-    // IfSomeOrElse and co. (less runtime cost compared to `Match()`, because of less or no usage of lambdas) //
+    // IfSomeOrElse and co. //
 
     /// <summary>
-    /// Even cheaper than a `Match()` that returns.
+    /// Returns back the first parameter, `someCase`, if the `Option` is `Some`.
+    /// Else, the second parameter, `noneCase`, is returned back.
+    ///
+    /// Both parameters must be of one, shared type.
+    /// 
+    /// Use this method if you don't need to read the contained value.
+    ///
+    /// This method can surely be used in performance critical situations.
     /// </summary>
     /// <typeparam name="R">Return Type</typeparam>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
