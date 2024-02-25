@@ -19,7 +19,8 @@ internal sealed class ParameterlessConstructedResultException : Exception
 /// 
 /// `Result` is an alternative to exceptions.
 ///
-/// If performance is critical, avoid using any methods that use delegates in their parameter, such as `Match`.
+/// If performance is ultra-critical, like in loops with many, many iterations, avoid calling any methods that use
+/// delegates in their parameter(s), such as `Match`.
 /// 
 /// Note: Using the Default constructor, i.e. `new Result()` with no parameters, is forbidden and will throw.
 /// </summary>
@@ -131,31 +132,31 @@ public readonly record struct Result<T, E>
     }
 
     // Alternatives //
-    
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public T OkOrElse(in T alt)
     {
         return IsOk ? OkObj! : alt;
     }
-    
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public T OkOrElseRun(in Func<T> altFunc)
     {
         return IsOk ? OkObj! : altFunc();
     }
-    
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public E ErrOrElse(in E alt)
     {
         return !IsOk ? ErrObj! : alt;
     }
-    
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public E ErrOrElseRun(in Func<T, E> altFunc)
     {
         return !IsOk ? ErrObj! : altFunc(OkObj!);
     }
-    
+
     // IfOkOrElse and co. //
 
     /// <summary>

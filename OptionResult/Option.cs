@@ -11,8 +11,8 @@ namespace OptionResult;
 ///  
 /// `Option` is an alternative to nulls.
 ///
-/// If performance is critical, like in loops with many iterations, avoid using any methods that use delegates in their
-/// parameter, such as `Match`.
+/// If performance is ultra-critical, like in loops with many, many iterations, avoid calling any methods that use
+/// delegates in their parameter(s), such as `Match`.
 /// </summary>
 /// <typeparam name="T">Type</typeparam>
 public readonly record struct Option<T>
