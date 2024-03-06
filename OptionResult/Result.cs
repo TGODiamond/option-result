@@ -5,6 +5,8 @@ namespace OptionResult;
 // Up to 13 slower than a try/catch on author's computer with the integer type.
 // Much, MUCH faster than try/catch which caught an exception.
 
+// TODO: Constructing `Result` using the `default` keyword is a big problem: Every field is set to the default value!!
+
 internal sealed class ParameterlessConstructedResultException : Exception
 {
     internal ParameterlessConstructedResultException(string message) : base(message)
@@ -13,7 +15,7 @@ internal sealed class ParameterlessConstructedResultException : Exception
 }
 
 /// <summary>
-/// Either `Ok` which have an "ok" value or `Err` which have an "error" value.
+/// Either `Ok` which have an `ok` value or `Err` which have an "error" value.
 ///
 /// Setting `T` as a nullable, aka. using the `?` operator, must never be used, especially where T is a value type.
 /// 
