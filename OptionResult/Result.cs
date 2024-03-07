@@ -22,16 +22,16 @@ internal sealed class DefaultInitializedResultException : Exception
 }
 
 /// <summary>
-/// Either `Ok` which have an `ok` value or `Err` which have an "error" value.
-///
-/// Setting `T` as a nullable, aka. using the `?` operator, must never be used, especially where T is a value type.
+/// Either `Ok` which have an `ok` value or `Err` which have an "error" value.<br /><br />
 /// 
-/// `Result` is an alternative to exceptions.
+/// Setting `T` as a nullable, aka. using the `?` operator, must never be used, especially where T is a value type.<br /><br />
+/// 
+/// `Result` is an alternative to exceptions.<br /><br />
 ///
 /// If performance is ultra-critical, like in loops with many, many iterations, avoid calling any methods that use
-/// delegates in their parameter(s), such as `Match`.
+/// delegates in their parameter(s), such as `Match`.<br /><br />
 /// 
-/// Note: Using the Default constructor, i.e. `new Result()` with no parameters, is forbidden and will throw.
+/// Note: Using the Default constructor, i.e. `new Result()` with no parameters, is forbidden and will throw.<br /><br />
 /// Note: Using the `default` keyword to initialize this `Result` struct is forbidden.
 /// </summary>
 /// <typeparam name="T">Type</typeparam>
@@ -151,9 +151,9 @@ public readonly record struct Result<T, E>
     // Type Conversion //
 
     /// <summary>
-    /// Returns one type where both `T` and `E` can be converted to that type.
+    /// Returns one type where both `T` and `E` can be converted to that type.<br /><br />
     ///
-    /// Please use the type that both `T` and `E` is, in the type parameter.
+    /// Please use the type that both `T` and `E` is, in the type parameter.<br /><br />
     /// </summary>
     /// <typeparam name="R">Return Type</typeparam>
     /// <returns>Return type (a type which `T` and `E` can cast to)</returns>
@@ -228,9 +228,9 @@ public readonly record struct Result<T, E>
     // Porting methods //
 
     /// <summary>
-    /// Converts a throwable method into the `Result` type.
+    /// Converts a throwable method into the `Result` type.<br /><br />
     /// 
-    /// Useful for porting exceptions into `Result`s.
+    /// Useful for porting exceptions into `Result`s.<br /><br />
     /// 
     /// If you want a total guarantee of no exceptions slipping through, let the `E` type be type `Exception`.
     /// </summary>

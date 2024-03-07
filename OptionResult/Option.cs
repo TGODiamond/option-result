@@ -5,11 +5,11 @@ namespace OptionResult;
 // Up to 13 slower than a null check on author's computer with the integer type.
 
 /// <summary>
-/// Either `Some` which have a value or `None` which doesn't have a value.
+/// Either `Some` which have a value or `None` which doesn't have a value.<br /><br />
 ///
-/// Setting `T` as a nullable, aka. using the `?` operator, must never be used, especially where T is a value type.
+/// Setting `T` as a nullable, aka. using the `?` operator, must never be used, especially where T is a value type.<br /><br />
 ///  
-/// `Option` is an alternative to nulls.
+/// `Option` is an alternative to nulls.<br /><br />
 ///
 /// If performance is ultra-critical, like in loops with many, many iterations, avoid calling any methods that use
 /// delegates in their parameter(s), such as `Match`.
@@ -83,7 +83,7 @@ public readonly record struct Option<T>
 
     /// <summary>
     /// Non-returning `Match`. The `someCase` action gets run if this `Result` is `Some`, returning the contained `Ok`
-    /// value to that action.
+    /// value to that action.<br /><br />
     ///
     /// Else, noneCase gets run, returning the contained `Err` value.
     /// </summary>
@@ -101,9 +101,9 @@ public readonly record struct Option<T>
 
     /// <summary>
     /// `Match` that returns `R`. The `someCase` function gets run if this `Result` is `Some`, returning the contained
-    /// `Ok` value to that function.
+    /// `Ok` value to that function.<br /><br />
     ///
-    /// Else, noneCase gets run, returning the contained `Err` value.
+    /// Else, noneCase gets run, returning the contained `Err` value.<br /><br />
     ///
     /// Both functions must return the same type, `R`.
     /// </summary>
@@ -118,9 +118,9 @@ public readonly record struct Option<T>
 
     /// <summary>
     /// If the `Result` is `Some`, then this method returns the contained value inside the `Option`.
-    /// Else, then this method returns the value in the parameter.
+    /// Else, then this method returns the value in the parameter.<br /><br />
     ///
-    /// The parameter's type must be the same as the contained value's type.
+    /// The parameter's type must be the same as the contained value's type.<br /><br />
     ///
     /// This method can surely be used in performance critical situations.
     /// </summary>
@@ -132,9 +132,9 @@ public readonly record struct Option<T>
 
     /// <summary>
     /// Just like the `SomeOrElse()` method, but the parameter is lazily evaluated.
-    /// This method only runs given method inside the parameter if the `Option` is `None`.
+    /// This method only runs given method inside the parameter if the `Option` is `None`.<br /><br />
     ///
-    /// Note: Just because the function in the parameter is lazily evaluated doesn't mean this method is performant.
+    /// Note: Just because the function in the parameter is lazily evaluated doesn't mean this method is performant.<br /><br />
     ///
     /// For critical performance, use the `SomeOrElse` method instead. Only if the code in the delegate itself does
     /// something expensive should this method be used in performance critical situations.
@@ -149,11 +149,11 @@ public readonly record struct Option<T>
 
     /// <summary>
     /// Returns back the first parameter, `someCase`, if the `Option` is `Some`.
-    /// Else, the second parameter, `noneCase`, is returned back.
+    /// Else, the second parameter, `noneCase`, is returned back.<br /><br />
     ///
-    /// Both parameters must be of one, shared type.
+    /// Both parameters must be of one, shared type.<br /><br />
     /// 
-    /// Use this method if you don't need to read the contained value.
+    /// Use this method if you don't need to read the contained value.<br /><br />
     ///
     /// This method can surely be used in performance critical situations.
     /// </summary>
@@ -185,11 +185,11 @@ public readonly record struct Option<T>
     // Porting methods //
 
     /// <summary>
-    /// Just like a `FromMaybe`, but for methods that return `void`.
+    /// Just like a `FromMaybe`, but for methods that return `void`.<br /><br />
     ///
-    /// Use the Default constructor to construct this struct, then initialize it with the `TryCatch` method afterwards.
+    /// Use the Default constructor to construct this struct, then initialize it with the `TryCatch` method afterwards.<br /><br />
     ///
-    /// Returns `Some(E)` if the method passed threw with exception `E`.
+    /// Returns `Some(E)` if the method passed threw with exception `E`.<br /><br />
     ///
     /// Returns `None` if no exception was caught.
     /// </summary>
