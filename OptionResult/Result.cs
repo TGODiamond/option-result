@@ -14,6 +14,13 @@ internal sealed class ParameterlessConstructedResultException : Exception
     }
 }
 
+internal sealed class DefaultInitializedResultException : Exception
+{
+    internal DefaultInitializedResultException(string message) : base(message)
+    {
+    }
+}
+
 /// <summary>
 /// Either `Ok` which have an `ok` value or `Err` which have an "error" value.
 ///
@@ -25,15 +32,32 @@ internal sealed class ParameterlessConstructedResultException : Exception
 /// delegates in their parameter(s), such as `Match`.
 /// 
 /// Note: Using the Default constructor, i.e. `new Result()` with no parameters, is forbidden and will throw.
+/// Note: Using the `default` keyword to initialize this `Result` struct is forbidden.
 /// </summary>
 /// <typeparam name="T">Type</typeparam>
 /// <typeparam name="E">Error</typeparam>
 public readonly record struct Result<T, E>
 {
     // Keep the fields public, they're readonly anyways.
+
+    /// <summary>
+    /// This bool exist to check if the `default` keyword was used to initialize the `Result`.
+    /// </summary>
+    private bool IsNotDefaultInit { get; }
+
     public bool IsOk { get; }
     public T? OkObj { get; }
     public E? ErrObj { get; }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private E GetErrObj()
+    {
+        if (!IsNotDefaultInit)
+            throw new DefaultInitializedResultException(
+                "The keyword `default` has been used to initialize this `Result`, which is forbidden.");
+
+        return ErrObj!;
+    }
 
     // Constructors //
 
@@ -50,12 +74,16 @@ public readonly record struct Result<T, E>
     {
         OkObj = okObj;
         IsOk = true;
+
+        IsNotDefaultInit = true;
     }
 
     public Result(in E errObj)
     {
         ErrObj = errObj;
         IsOk = false;
+
+        IsNotDefaultInit = true;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -64,6 +92,8 @@ public readonly record struct Result<T, E>
         IsOk = isOk;
         OkObj = t;
         ErrObj = e;
+
+        IsNotDefaultInit = true;
     }
 
     // Explicit constructors //
@@ -108,14 +138,14 @@ public readonly record struct Result<T, E>
             return;
         }
 
-        errCase(ErrObj!);
+        errCase(GetErrObj());
     }
 
     /// <typeparam name="R">Return Type</typeparam>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public R Match<R>(in Func<T, R> okCase, in Func<E, R> errCase)
     {
-        return IsOk ? okCase(OkObj!) : errCase(ErrObj!);
+        return IsOk ? okCase(OkObj!) : errCase(GetErrObj());
     }
 
     // Type Conversion //
@@ -130,7 +160,7 @@ public readonly record struct Result<T, E>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public R Return<R>() where R : T, E
     {
-        return IsOk ? (R)OkObj! : (R)ErrObj!;
+        return IsOk ? (R)OkObj! : (R)GetErrObj()!;
     }
 
     // Alternatives //
@@ -150,13 +180,13 @@ public readonly record struct Result<T, E>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public E ErrOrElse(in E alt)
     {
-        return !IsOk ? ErrObj! : alt;
+        return !IsOk ? GetErrObj() : alt;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public E ErrOrElseRun(in Func<T, E> altFunc)
     {
-        return !IsOk ? ErrObj! : altFunc(OkObj!);
+        return !IsOk ? GetErrObj() : altFunc(OkObj!);
     }
 
     // IfOkOrElse and co. //
@@ -180,7 +210,7 @@ public readonly record struct Result<T, E>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public R RunIfErrOrElse<R>(in Func<E, R> errCase, in R okCase)
     {
-        return !IsOk ? errCase(ErrObj!) : okCase;
+        return !IsOk ? errCase(GetErrObj()) : okCase;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -192,7 +222,7 @@ public readonly record struct Result<T, E>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void RunIfErr(in Action<E> okCase)
     {
-        if (!IsOk) okCase(ErrObj!);
+        if (!IsOk) okCase(GetErrObj());
     }
 
     // Porting methods //
@@ -276,7 +306,7 @@ public readonly record struct Result<T, E>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public T OkOrThrowErr<TException>() where TException : Exception, E
     {
-        return IsOk ? OkObj! : throw (TException)ErrObj!;
+        return IsOk ? OkObj! : throw (TException)GetErrObj()!;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
