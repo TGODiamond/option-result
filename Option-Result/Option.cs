@@ -4,6 +4,14 @@ namespace OptionResult;
 
 // Up to 13 slower than a null check on author's computer with the integer type.
 
+// PanicException
+internal sealed class OptionPanicException : Exception
+{
+    internal OptionPanicException(string message) : base(message)
+    {
+    }
+}
+
 /// <summary>
 /// Either `Some` which have a value or `None` which doesn't have a value.<br /><br />
 ///
@@ -180,6 +188,22 @@ public readonly record struct Option<T>
     public void RunIfNone(in Action noneCase)
     {
         if (!IsSome) noneCase();
+    }
+
+    // Panic //
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public T Unwrap()
+    {
+        if (IsSome) return Obj!;
+        throw new ResultPanicException("Unwrap on a non-ok `Result`!");
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public T Expect(in string failMessage)
+    {
+        if (IsSome) return Obj!;
+        throw new ResultPanicException(failMessage);
     }
 
     // Porting methods //

@@ -21,6 +21,14 @@ internal sealed class DefaultInitializedResultException : Exception
     }
 }
 
+// PanicException
+internal sealed class ResultPanicException : Exception
+{
+    internal ResultPanicException(string message) : base(message)
+    {
+    }
+}
+
 /// <summary>
 /// Either `Ok` which have an `ok` value or `Err` which have an "error" value.<br /><br />
 /// 
@@ -223,6 +231,36 @@ public readonly record struct Result<T, E>
     public void RunIfErr(in Action<E> okCase)
     {
         if (!IsOk) okCase(GetErrObj());
+    }
+
+    // Unwrap //
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public T Unwrap()
+    {
+        if (IsOk) return OkObj!;
+        throw new ResultPanicException("Unwrap on a non-ok `Result`!");
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public E UnwrapErr()
+    {
+        if (!IsOk) return GetErrObj();
+        throw new ResultPanicException("Unwrap on a non-err `Result`!");
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public T Expect(in string failMessage)
+    {
+        if (IsOk) return OkObj!;
+        throw new ResultPanicException(failMessage);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public E ExpectErr(in string failMessage)
+    {
+        if (!IsOk) return GetErrObj();
+        throw new ResultPanicException(failMessage);
     }
 
     // Porting methods //
