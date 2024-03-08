@@ -190,7 +190,7 @@ public readonly record struct Option<T>
         if (!IsSome) noneCase();
     }
 
-    // Panic //
+    // Unwraps //
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public T Unwrap()

@@ -233,7 +233,7 @@ public readonly record struct Result<T, E>
         if (!IsOk) okCase(GetErrObj());
     }
 
-    // Unwrap //
+    // Unwraps //
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public T Unwrap()
