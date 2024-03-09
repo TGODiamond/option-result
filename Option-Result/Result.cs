@@ -56,6 +56,7 @@ public readonly record struct Result<T, E>
     private bool IsNotDefaultInit { get; }
 
     public bool IsOk { get; }
+    public bool IsErr => !IsOk;
     public T? OkObj { get; }
     public E? ErrObj { get; }
 

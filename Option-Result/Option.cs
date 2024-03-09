@@ -29,6 +29,7 @@ public readonly record struct Option<T>
 {
     // Keep the fields public, they're readonly anyways.
     public bool IsSome { get; }
+    public bool IsNone => !IsSome;
     public T? Obj { get; }
 
     // Constructors //
