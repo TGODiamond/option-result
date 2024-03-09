@@ -5,8 +5,7 @@ namespace OptionResult;
 // Up to 13 slower than a try/catch on author's computer with the integer type.
 // Much, MUCH faster than try/catch which caught an exception.
 
-// TODO: Constructing `Result` using the `default` keyword is a big problem: Every field is set to the default value!!
-
+[Serializable]
 internal sealed class ParameterlessConstructedResultException : Exception
 {
     internal ParameterlessConstructedResultException(string message) : base(message)
@@ -14,6 +13,7 @@ internal sealed class ParameterlessConstructedResultException : Exception
     }
 }
 
+[Serializable]
 internal sealed class DefaultInitializedResultException : Exception
 {
     internal DefaultInitializedResultException(string message) : base(message)
@@ -22,6 +22,7 @@ internal sealed class DefaultInitializedResultException : Exception
 }
 
 // PanicException
+[Serializable]
 internal sealed class ResultPanicException : Exception
 {
     internal ResultPanicException(string message) : base(message)
@@ -44,6 +45,7 @@ internal sealed class ResultPanicException : Exception
 /// </summary>
 /// <typeparam name="T">Type</typeparam>
 /// <typeparam name="E">Error</typeparam>
+[Serializable]
 public readonly record struct Result<T, E>
 {
     // Keep the fields public, they're readonly anyways.

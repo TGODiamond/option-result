@@ -5,6 +5,7 @@ namespace OptionResult;
 // Up to 13 slower than a null check on author's computer with the integer type.
 
 // PanicException
+[Serializable]
 internal sealed class OptionPanicException : Exception
 {
     internal OptionPanicException(string message) : base(message)
@@ -23,6 +24,7 @@ internal sealed class OptionPanicException : Exception
 /// delegates in their parameter(s), such as `Match`.
 /// </summary>
 /// <typeparam name="T">Type</typeparam>
+[Serializable]
 public readonly record struct Option<T>
 {
     // Keep the fields public, they're readonly anyways.
