@@ -129,21 +129,21 @@ public readonly record struct Option<T>
     // OutIfSome //
 
     /// <summary>
-    /// 
+    /// Outs the contained value contained inside if the `Option` is `Some`.
     /// </summary>
     /// <returns>Boolean to be used in an if-statement.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public bool OutIfSome([NotNullWhen(true)] out T? t)
+    public bool OutIfSome([NotNullWhen(true)] out T? obj)
     {
         if (IsSome)
         {
-            t = Obj;
+            obj = Obj;
 #pragma warning disable CS8762 // Parameter must have a non-null value when exiting in some condition.
             return true;
 #pragma warning restore CS8762 // Parameter must have a non-null value when exiting in some condition.
         }
         
-        t = default;
+        obj = default;
         return false;
     }
     

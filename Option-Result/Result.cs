@@ -177,7 +177,7 @@ public readonly record struct Result<T, E>
     // OutIfOk and co //
 
     /// <summary>
-    /// 
+    /// Outs the contained `ok` value contained inside if the `Result` is `Ok`.
     /// </summary>
     /// <returns>Boolean to be used in an if-statement.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -196,7 +196,7 @@ public readonly record struct Result<T, E>
     }
     
     /// <summary>
-    /// 
+    /// Outs the contained `err` value contained inside if the `Result` is `Err`.
     /// </summary>
     /// <returns>Boolean to be used in an if-statement.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -215,7 +215,8 @@ public readonly record struct Result<T, E>
     }
     
     /// <summary>
-    /// 
+    /// Outs the contained `ok` value contained inside if the `Result` is `Ok`.<br />
+    /// Else, outs the `err` value.
     /// </summary>
     /// <returns>Boolean to be used in an if-statement.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
