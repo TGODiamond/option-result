@@ -1,4 +1,5 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
 
 namespace OptionResult;
 
@@ -138,27 +139,6 @@ public readonly record struct Result<T, E>
         return new Option<T>(IsOk, OkObj);
     }
 
-    // Match //
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public void Match(in Action<T> okCase, in Action<E> errCase)
-    {
-        if (IsOk)
-        {
-            okCase(OkObj!);
-            return;
-        }
-
-        errCase(GetErrObj());
-    }
-
-    /// <typeparam name="R">Return Type</typeparam>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public R Match<R>(in Func<T, R> okCase, in Func<E, R> errCase)
-    {
-        return IsOk ? okCase(OkObj!) : errCase(GetErrObj());
-    }
-
     // Type Conversion //
 
     /// <summary>
@@ -182,24 +162,6 @@ public readonly record struct Result<T, E>
         return IsOk ? OkObj! : alt;
     }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public T OkOrElseRun(in Func<T> altFunc)
-    {
-        return IsOk ? OkObj! : altFunc();
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public E ErrOrElse(in E alt)
-    {
-        return !IsOk ? GetErrObj() : alt;
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public E ErrOrElseRun(in Func<T, E> altFunc)
-    {
-        return !IsOk ? GetErrObj() : altFunc(OkObj!);
-    }
-
     // IfOkOrElse and co. //
 
     /// <summary>
@@ -211,31 +173,70 @@ public readonly record struct Result<T, E>
     {
         return IsOk ? okCase : errCase;
     }
+    
+    // OutIfOk and co //
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns>Boolean to be used in an if-statement.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public R RunIfOkOrElse<R>(in Func<T, R> okCase, in R errCase)
+    public bool OutIfOk([NotNullWhen(true)] out T? okObj)
     {
-        return IsOk ? okCase(OkObj!) : errCase;
+        if (IsOk)
+        {
+            okObj = OkObj;
+#pragma warning disable CS8762 // Parameter must have a non-null value when exiting in some condition.
+            return true;
+#pragma warning restore CS8762 // Parameter must have a non-null value when exiting in some condition.
+        }
+        
+        okObj = default;
+        return false;
     }
-
+    
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns>Boolean to be used in an if-statement.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public R RunIfErrOrElse<R>(in Func<E, R> errCase, in R okCase)
+    public bool OutIfErr([NotNullWhen(true)] out E? errObj)
     {
-        return !IsOk ? errCase(GetErrObj()) : okCase;
+        if (IsErr)
+        {
+            errObj = ErrObj;
+#pragma warning disable CS8762 // Parameter must have a non-null value when exiting in some condition.
+            return true;
+#pragma warning restore CS8762 // Parameter must have a non-null value when exiting in some condition.
+        }
+        
+        errObj = default;
+        return false;
     }
-
+    
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns>Boolean to be used in an if-statement.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public void RunIfOk(in Action<T> okCase)
+    public bool OutIfOkElseErr([NotNullWhen(true)] out T? okObj, [NotNullWhen(false)] out E? errObj)
     {
-        if (IsOk) okCase(OkObj!);
+        if (IsOk)
+        {
+            okObj = OkObj;
+            errObj = default;
+#pragma warning disable CS8762 // Parameter must have a non-null value when exiting in some condition.
+            return true;
+#pragma warning restore CS8762 // Parameter must have a non-null value when exiting in some condition.
+        }
+        
+        okObj = default;
+        errObj = ErrObj;
+#pragma warning disable CS8762 // Parameter must have a non-null value when exiting in some condition.
+        return false;
+#pragma warning restore CS8762 // Parameter must have a non-null value when exiting in some condition.
     }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public void RunIfErr(in Action<E> okCase)
-    {
-        if (!IsOk) okCase(GetErrObj());
-    }
-
+    
     // Unwraps //
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -248,7 +249,7 @@ public readonly record struct Result<T, E>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public E UnwrapErr()
     {
-        if (!IsOk) return GetErrObj();
+        if (IsErr) return GetErrObj();
         throw new ResultPanicException("Unwrap on a non-err `Result`!");
     }
 
@@ -262,7 +263,7 @@ public readonly record struct Result<T, E>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public E ExpectErr(in string failMessage)
     {
-        if (!IsOk) return GetErrObj();
+        if (IsErr) return GetErrObj();
         throw new ResultPanicException(failMessage);
     }
 

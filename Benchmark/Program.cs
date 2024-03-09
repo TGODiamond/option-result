@@ -65,9 +65,14 @@ timer0.Start();
 
 for (long i = 0; i <= 10_000_000_000 - 1; i++)
 {
-    var myOptInt = Result<uint, uint>.Ok(2024);
+    var myOptInt = Result<int, int>.Ok(2024);
 
-    var res = myOptInt.Return<uint>();
+    int res = 123;
+
+    if (myOptInt.OutIfOk(out var val))
+    {
+        res = val;
+    }
 
     if (res != 2024) throw new Exception("Got wrong integer");
 }

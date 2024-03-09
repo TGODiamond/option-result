@@ -1,4 +1,5 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
 
 namespace OptionResult;
 
@@ -90,41 +91,6 @@ public readonly record struct Option<T>
         return new Result<T, E>(IsSome, Obj, error);
     }
 
-    // Match //
-
-    /// <summary>
-    /// Non-returning `Match`. The `someCase` action gets run if this `Result` is `Some`, returning the contained `Ok`
-    /// value to that action.<br /><br />
-    ///
-    /// Else, noneCase gets run, returning the contained `Err` value.
-    /// </summary>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public void Match(in Action<T> someCase, in Action noneCase)
-    {
-        if (IsSome)
-        {
-            someCase(Obj!);
-            return;
-        }
-
-        noneCase();
-    }
-
-    /// <summary>
-    /// `Match` that returns `R`. The `someCase` function gets run if this `Result` is `Some`, returning the contained
-    /// `Ok` value to that function.<br /><br />
-    ///
-    /// Else, noneCase gets run, returning the contained `Err` value.<br /><br />
-    ///
-    /// Both functions must return the same type, `R`.
-    /// </summary>
-    /// <typeparam name="R">Return Type</typeparam>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public R Match<R>(in Func<T, R> someCase, in Func<R> noneCase)
-    {
-        return IsSome ? someCase(Obj!) : noneCase();
-    }
-
     // Alternatives //
 
     /// <summary>
@@ -139,21 +105,6 @@ public readonly record struct Option<T>
     public T SomeOrElse(in T alt)
     {
         return IsSome ? Obj! : alt;
-    }
-
-    /// <summary>
-    /// Just like the `SomeOrElse()` method, but the parameter is lazily evaluated.
-    /// This method only runs given method inside the parameter if the `Option` is `None`.<br /><br />
-    ///
-    /// Note: Just because the function in the parameter is lazily evaluated doesn't mean this method is performant.<br /><br />
-    ///
-    /// For critical performance, use the `SomeOrElse` method instead. Only if the code in the delegate itself does
-    /// something expensive should this method be used in performance critical situations.
-    /// </summary>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public T SomeOrElseRun(in Func<T> altFunc)
-    {
-        return IsSome ? Obj! : altFunc();
     }
 
     // IfSomeOrElse and co. //
@@ -174,25 +125,28 @@ public readonly record struct Option<T>
     {
         return IsSome ? someCase : noneCase;
     }
+    
+    // OutIfSome //
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns>Boolean to be used in an if-statement.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public R RunIfSomeOrElse<R>(in Func<T, R> someCase, in R noneCase)
+    public bool OutIfSome([NotNullWhen(true)] out T? t)
     {
-        return IsSome ? someCase(Obj!) : noneCase;
+        if (IsSome)
+        {
+            t = Obj;
+#pragma warning disable CS8762 // Parameter must have a non-null value when exiting in some condition.
+            return true;
+#pragma warning restore CS8762 // Parameter must have a non-null value when exiting in some condition.
+        }
+        
+        t = default;
+        return false;
     }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public void RunIfSome(in Action<T> someCase)
-    {
-        if (IsSome) someCase(Obj!);
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public void RunIfNone(in Action noneCase)
-    {
-        if (!IsSome) noneCase();
-    }
-
+    
     // Unwraps //
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
