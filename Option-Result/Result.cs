@@ -37,9 +37,6 @@ internal sealed class ResultPanicException : Exception
 /// Setting `T` as a nullable, aka. using the `?` operator, must never be used, especially where T is a value type.<br /><br />
 /// 
 /// `Result` is an alternative to exceptions.<br /><br />
-///
-/// If performance is ultra-critical, like in loops with many, many iterations, avoid calling any methods that use
-/// delegates in their parameter(s), such as `Match`.<br /><br />
 /// 
 /// Note: Using the Default constructor, i.e. `new Result()` with no parameters, is forbidden and will throw.<br /><br />
 /// Note: Using the `default` keyword to initialize this `Result` struct is forbidden.
@@ -163,10 +160,7 @@ public readonly record struct Result<T, E>
     }
 
     // IfOkOrElse and co. //
-
-    /// <summary>
-    /// Even cheaper than a `Match()` that returns.
-    /// </summary>
+    
     /// <typeparam name="R">Return Type</typeparam>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public R IfOkOrElse<R>(in R okCase, in R errCase)

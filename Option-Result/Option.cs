@@ -21,8 +21,6 @@ internal sealed class OptionPanicException : Exception
 ///  
 /// `Option` is an alternative to nulls.<br /><br />
 ///
-/// If performance is ultra-critical, like in loops with many, many iterations, avoid calling any methods that use
-/// delegates in their parameter(s), such as `Match`.
 /// </summary>
 /// <typeparam name="T">Type</typeparam>
 [Serializable]
