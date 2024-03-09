@@ -125,7 +125,7 @@ public readonly record struct Option<T>
     {
         return IsSome ? someCase : noneCase;
     }
-    
+
     // OutIfSome //
 
     /// <summary>
@@ -142,11 +142,11 @@ public readonly record struct Option<T>
             return true;
 #pragma warning restore CS8762 // Parameter must have a non-null value when exiting in some condition.
         }
-        
+
         obj = default;
         return false;
     }
-    
+
     // Unwraps //
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

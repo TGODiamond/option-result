@@ -173,7 +173,7 @@ public readonly record struct Result<T, E>
     {
         return IsOk ? okCase : errCase;
     }
-    
+
     // OutIfOk and co //
 
     /// <summary>
@@ -190,11 +190,11 @@ public readonly record struct Result<T, E>
             return true;
 #pragma warning restore CS8762 // Parameter must have a non-null value when exiting in some condition.
         }
-        
+
         okObj = default;
         return false;
     }
-    
+
     /// <summary>
     /// Outs the contained `err` value contained inside if the `Result` is `Err`.
     /// </summary>
@@ -209,11 +209,11 @@ public readonly record struct Result<T, E>
             return true;
 #pragma warning restore CS8762 // Parameter must have a non-null value when exiting in some condition.
         }
-        
+
         errObj = default;
         return false;
     }
-    
+
     /// <summary>
     /// Outs the contained `ok` value contained inside if the `Result` is `Ok`.<br />
     /// Else, outs the `err` value.
@@ -230,14 +230,14 @@ public readonly record struct Result<T, E>
             return true;
 #pragma warning restore CS8762 // Parameter must have a non-null value when exiting in some condition.
         }
-        
+
         okObj = default;
         errObj = ErrObj;
 #pragma warning disable CS8762 // Parameter must have a non-null value when exiting in some condition.
         return false;
 #pragma warning restore CS8762 // Parameter must have a non-null value when exiting in some condition.
     }
-    
+
     // Unwraps //
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
