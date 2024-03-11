@@ -68,7 +68,7 @@ var myOptInt = Result<int, int>.Err(2024);
 for (long i = 0; i <= 10_000_000_000 - 1; i++)
 {
     int val;
-    
+
     if (myOptInt.OutIfOkElseErr(out var okVal, out var errVal))
     {
         val = okVal;

@@ -44,19 +44,17 @@ internal sealed class ResultPanicException : Exception
 /// <typeparam name="T">Type</typeparam>
 /// <typeparam name="E">Error</typeparam>
 [Serializable]
-public readonly record struct Result<T, E>
+public record struct Result<T, E>
 {
-    // Keep the fields public, they're readonly anyways.
-
     /// <summary>
     /// This bool exist to check if the `default` keyword was used to initialize the `Result`.
     /// </summary>
     private bool IsNotDefaultInit { get; }
 
-    public bool IsOk { get; }
+    public bool IsOk { private set; get; }
     public bool IsErr => !IsOk;
-    public T? OkObj { get; }
-    public E? ErrObj { get; }
+    public T? OkObj { private set; get; }
+    public E? ErrObj { private set; get; }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private E GetErrObj()
@@ -125,6 +123,22 @@ public readonly record struct Result<T, E>
         return new Result<T, E>(e);
     }
 
+    // Setters //
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void SetOk(in T okObj)
+    {
+        OkObj = okObj;
+        IsOk = true;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void SetErr(in E errObj)
+    {
+        ErrObj = errObj;
+        IsOk = false;
+    }
+
     // Convert to `Option`
 
     /// <summary>
@@ -160,7 +174,7 @@ public readonly record struct Result<T, E>
     }
 
     // IfOkOrElse and co. //
-    
+
     /// <typeparam name="R">Return Type</typeparam>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public R IfOkOrElse<R>(in R okCase, in R errCase)
@@ -218,18 +232,14 @@ public readonly record struct Result<T, E>
     {
         if (IsOk)
         {
-            okObj = OkObj;
+            okObj = OkObj!;
             errObj = default;
-#pragma warning disable CS8762 // Parameter must have a non-null value when exiting in some condition.
             return true;
-#pragma warning restore CS8762 // Parameter must have a non-null value when exiting in some condition.
         }
 
         okObj = default;
-        errObj = ErrObj;
-#pragma warning disable CS8762 // Parameter must have a non-null value when exiting in some condition.
+        errObj = ErrObj!;
         return false;
-#pragma warning restore CS8762 // Parameter must have a non-null value when exiting in some condition.
     }
 
     // Unwraps //

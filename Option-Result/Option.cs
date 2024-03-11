@@ -24,12 +24,11 @@ internal sealed class OptionPanicException : Exception
 /// </summary>
 /// <typeparam name="T">Type</typeparam>
 [Serializable]
-public readonly record struct Option<T>
+public record struct Option<T>
 {
-    // Keep the fields public, they're readonly anyways.
-    public bool IsSome { get; }
+    public bool IsSome { private set; get; }
     public bool IsNone => !IsSome;
-    public T? Obj { get; }
+    public T? Obj { private set; get; }
 
     // Constructors //
 
@@ -75,6 +74,21 @@ public readonly record struct Option<T>
     public static Option<T> None()
     {
         return new Option<T>();
+    }
+
+    // Setters //
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void SetSome(in T obj)
+    {
+        Obj = obj;
+        IsSome = true;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void SetNone()
+    {
+        IsSome = false;
     }
 
     // Convert to `Result`
@@ -135,10 +149,8 @@ public readonly record struct Option<T>
     {
         if (IsSome)
         {
-            obj = Obj;
-#pragma warning disable CS8762 // Parameter must have a non-null value when exiting in some condition.
+            obj = Obj!;
             return true;
-#pragma warning restore CS8762 // Parameter must have a non-null value when exiting in some condition.
         }
 
         obj = default;
